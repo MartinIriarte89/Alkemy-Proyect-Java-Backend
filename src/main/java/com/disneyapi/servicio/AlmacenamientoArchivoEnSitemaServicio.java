@@ -24,11 +24,11 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class ServicioAlmacenamientoArchivoEnSitema implements ServicioAlmacenamiento {
+public class AlmacenamientoArchivoEnSitemaServicio implements AlmacenamientoServicio {
 
 	private final Path ubicacionRaiz;
 
-	public ServicioAlmacenamientoArchivoEnSitema(@Value("${carga.ubicacion-raiz}") String path) {
+	public AlmacenamientoArchivoEnSitemaServicio(@Value("${carga.ubicacion-raiz}") String path) {
 		this.ubicacionRaiz = Paths.get(path);
 	}
 

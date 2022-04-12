@@ -6,13 +6,10 @@ import com.disneyapi.modelo.Genero;
 import com.disneyapi.repositorio.GeneroRepositorio;
 import com.disneyapi.servicio.base.BaseServicio;
 
-import lombok.RequiredArgsConstructor;
-
 @Service
-@RequiredArgsConstructor
 public class GeneroServicio extends BaseServicio<Genero, Long, GeneroRepositorio> {
 
-	private final AlmacenamientoServicio almacenamientoServicio;
+	private AlmacenamientoServicio almacenamientoServicio;
 	
 	public GeneroServicio(GeneroRepositorio repositorio, AlmacenamientoServicio almacenamientoServicio) {
 		super(repositorio);

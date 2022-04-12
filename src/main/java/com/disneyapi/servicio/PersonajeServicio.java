@@ -7,13 +7,10 @@ import com.disneyapi.modelo.Personaje;
 import com.disneyapi.repositorio.PersonajeRepositorio;
 import com.disneyapi.servicio.base.BaseServicio;
 
-import lombok.RequiredArgsConstructor;
-
 @Service
-@RequiredArgsConstructor
 public class PersonajeServicio extends BaseServicio<Personaje, Long, PersonajeRepositorio> {
 
-	private final AlmacenamientoServicio almacenamientoServicio;
+	private AlmacenamientoServicio almacenamientoServicio;
 
 	@Autowired
 	public PersonajeServicio(PersonajeRepositorio repositorio, AlmacenamientoServicio almacenamientoServicio) {
