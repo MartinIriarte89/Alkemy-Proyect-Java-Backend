@@ -1,4 +1,4 @@
-package com.disneyapi.model;
+package com.disneyapi.modelo;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Character {
+public class Personaje {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,15 +37,17 @@ public class Character {
 	
 	@Min(0)
 	@Max(200)
+	@NotNull
 	private int edad;
 	
 	@Min(0)
 	@Max(5000)
+	@NotNull
 	private double peso;
 	
 	private String historia;
 	
-	@ManyToMany
+	@ManyToMany(mappedBy = "personajes")
 	@NotNull
-	private List<Film> films;
+	private List<ProductoAudiovisual> audiovisuales;
 }
