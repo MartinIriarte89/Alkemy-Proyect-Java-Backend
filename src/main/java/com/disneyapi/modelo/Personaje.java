@@ -50,4 +50,8 @@ public class Personaje {
 	@ManyToMany(mappedBy = "personajes")
 	@NotNull
 	private List<ProductoAudiovisual> audiovisuales;
+	
+	public boolean esNulo() {
+		return false;
+	}
 }
