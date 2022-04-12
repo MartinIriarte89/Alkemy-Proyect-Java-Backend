@@ -1,5 +1,7 @@
 package com.disneyapi.servicio;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,5 +18,9 @@ public class PersonajeServicio extends BaseServicio<Personaje, Long, PersonajeRe
 	public PersonajeServicio(PersonajeRepositorio repositorio, AlmacenamientoServicio almacenamientoServicio) {
 		super(repositorio);
 		this.almacenamientoServicio = almacenamientoServicio;
+	}
+
+	public Optional<Personaje> buscarPorNombre(Optional<String> nombre) {
+		return this.repositorio.findByNombre(nombre.get());
 	}
 }
