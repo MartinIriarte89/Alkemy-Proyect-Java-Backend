@@ -17,8 +17,8 @@ import org.springframework.util.FileSystemUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.martiniriarte.error.exceptions.AlmacenamientoArchivoNoEncontradoException;
-import com.martiniriarte.error.exceptions.AlmacenamientoException;
+import com.disneyapi.error.exception.AlmacenamientoArchivoNoEncontradoException;
+import com.disneyapi.error.exception.AlmacenamientoException;
 
 import lombok.extern.slf4j.Slf4j;
 
