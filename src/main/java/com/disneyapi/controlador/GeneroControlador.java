@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.disneyapi.dto.CrearGeneroDto;
 import com.disneyapi.modelo.Genero;
 import com.disneyapi.servicio.GeneroServicio;
+import com.disneyapi.util.converter.GeneroDtoConverter;
 
 import lombok.RequiredArgsConstructor;
 
