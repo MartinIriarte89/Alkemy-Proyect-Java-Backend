@@ -3,6 +3,7 @@ package com.disneyapi.modelo;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -30,6 +32,7 @@ public class ProductoAudiovisual {
 	
 	@NotBlank
 	@Size(max = 70)
+	@Column(unique = true)
 	private String titulo;
 	
 	@NotNull
@@ -45,4 +48,9 @@ public class ProductoAudiovisual {
 			joinColumns = @JoinColumn(name = "producto_id"),
 			inverseJoinColumns = @JoinColumn(name = "personaje_id"))
 	private List<Personaje> personajes;
+	
+	@ManyToOne
+	@JoinColumn(name = "genero_id")
+	@NotNull
+	private Genero genero;
 }
