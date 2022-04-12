@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
+import com.disneyapi.controlador.FicheroControlador;
 import com.disneyapi.modelo.Genero;
 import com.disneyapi.repositorio.GeneroRepositorio;
 import com.disneyapi.servicio.base.BaseServicio;
