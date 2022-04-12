@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class Serie extends ProductoAudiovisual {
+public class Serie extends Audiovisual {
 
 	public Serie(String urlImagen, String titulo, LocalDate fechaDeCreacion, double calificacion,
 			List<Personaje> personajes, Genero genero) {

@@ -29,7 +29,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public abstract class ProductoAudiovisual {
+public abstract class Audiovisual {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

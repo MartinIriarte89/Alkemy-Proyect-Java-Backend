@@ -49,7 +49,7 @@ public class Personaje {
 	
 	@ManyToMany(mappedBy = "personajes")
 	@NotNull
-	private List<ProductoAudiovisual> audiovisuales;
+	private List<Audiovisual> audiovisuales;
 	
 	public boolean esNulo() {
 		return false;
