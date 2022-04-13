@@ -20,6 +20,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -54,11 +56,11 @@ public abstract class Audiovisual {
 	@JoinTable(
 			joinColumns = @JoinColumn(name = "producto_id"),
 			inverseJoinColumns = @JoinColumn(name = "personaje_id"))
+	@JsonBackReference(value = "hola")
 	private List<Personaje> personajes;
 	
 	@ManyToOne
 	@JoinColumn(name = "genero_id")
-	@NotNull
 	private Genero genero;
 	
 	public abstract boolean esNula();

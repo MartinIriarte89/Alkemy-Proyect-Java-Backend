@@ -14,6 +14,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -48,7 +50,7 @@ public class Personaje {
 	private String historia;
 	
 	@ManyToMany(mappedBy = "personajes")
-	@NotNull
+	@JsonManagedReference
 	private List<Audiovisual> audiovisuales;
 	
 	public boolean esNulo() {

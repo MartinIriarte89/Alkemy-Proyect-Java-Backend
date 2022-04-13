@@ -18,6 +18,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.disneyapi.modelo.Personaje;
 import com.disneyapi.modelo.objetonulo.PersonajeNulo;
 import com.disneyapi.servicio.PersonajeServicio;
+import com.disneyapi.util.converter.PersonajeDtoConverter;
+import com.disneyapi.util.paginacion.PaginacionLinks;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,6 +29,7 @@ public class PersonajeControlador {
 
 	private final PersonajeServicio personajeServicio;
 	private final PersonajeDtoConverter converter;
+	private final PaginacionLinks paginacionLinks;
 	
 	@GetMapping("/characters")
 	public ResponseEntity<List<Personaje>> getPersonajes(
@@ -44,7 +47,7 @@ public class PersonajeControlador {
 			else
 				return ResponseEntity.ok(Arrays.asList(personaje));
 		}else {
-			Page<Personaje> personajes = personajeServicio.buscarPorArgs(edad, peso, peliculaTitulo);
+			Page<Personaje> personajes = personajeServicio.buscarPorArgs(edad, peso, peliculaTitulo, pageable);
 			
 			if(personajes.isEmpty()) {
 				return ResponseEntity.notFound().build();
