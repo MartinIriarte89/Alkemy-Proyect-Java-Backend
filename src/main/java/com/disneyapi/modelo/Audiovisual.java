@@ -20,7 +20,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,37 +32,35 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public abstract class Audiovisual {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	private String urlImagen;
-	
+
 	@NotBlank
 	@Size(max = 70)
 	@Column(unique = true)
 	private String titulo;
-	
+
 	@NotNull
 	private LocalDate fechaDeCreacion;
-	
+
 	@NotNull
 	@Min(0)
 	@Max(5)
 	private double calificacion;
-	
+
 	@ManyToMany
-	@JoinTable(
-			joinColumns = @JoinColumn(name = "producto_id"),
-			inverseJoinColumns = @JoinColumn(name = "personaje_id"))
-	@JsonBackReference(value = "hola")
+	@JoinTable(joinColumns = @JoinColumn(name = "producto_id"), inverseJoinColumns = @JoinColumn(name = "personaje_id"))
 	private List<Personaje> personajes;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "genero_id")
 	private Genero genero;
-	
+
 	public abstract boolean esNula();
 }

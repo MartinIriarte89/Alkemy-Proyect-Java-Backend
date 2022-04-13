@@ -38,8 +38,9 @@ public class AlkemyProyectJavaBackendApplication {
 			
 			personajeServicio.guardar(p);
 			personajeServicio.guardar(p2);
-			audiovisualServicio.guardar(peli);
+			
 			audiovisualServicio.guardar(peli2);
+			audiovisualServicio.guardar(peli);
 		};
 	}
 

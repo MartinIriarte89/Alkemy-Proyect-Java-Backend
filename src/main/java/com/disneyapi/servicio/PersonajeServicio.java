@@ -12,7 +12,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
+import com.disneyapi.controlador.FicheroControlador;
 import com.disneyapi.modelo.Personaje;
 import com.disneyapi.repositorio.PersonajeRepositorio;
 import com.disneyapi.servicio.base.BaseServicio;
@@ -82,5 +85,37 @@ public class PersonajeServicio extends BaseServicio<Personaje, Long, PersonajeRe
 		Specification<Personaje> todas = specEdadPersonajes.and(specPesoPersonajes).and(specAudiovisualDePersonajes);
 
 		return this.repositorio.findAll(todas, pageable);
+	}
+
+	public Personaje guardarImagenYAgregarUrlImagen(Personaje personaje, MultipartFile archivo) {
+
+		if (!archivo.isEmpty()) {
+			String imagen = almacenamientoServicio.guardar(archivo);
+			String urlImagen = MvcUriComponentsBuilder
+					.fromMethodName(FicheroControlador.class, "serveFile", imagen, null).build().toUriString();
+			personaje.setUrlImagen(urlImagen);
+		}
+
+		return personaje;
+	}
+
+	public Personaje editar(Long id, Personaje personaje, MultipartFile archivo) {
+
+		if (existePorId(id)) {
+			personaje.setId(id);
+
+			if (!archivo.isEmpty()) {
+				String imagen = almacenamientoServicio.guardar(archivo);
+				String urlImagen = MvcUriComponentsBuilder
+						.fromMethodName(FicheroControlador.class, "serveFile", imagen, null).build().toUriString();
+				// Chequear el caso en que la imagen sea almacenada por primera vez con la
+				// edicion.
+				almacenamientoServicio.borrar(personaje.getUrlImagen());
+				personaje.setUrlImagen(urlImagen);
+			}
+
+			return editar(personaje);
+		} else
+			return personaje;
 	}
 }

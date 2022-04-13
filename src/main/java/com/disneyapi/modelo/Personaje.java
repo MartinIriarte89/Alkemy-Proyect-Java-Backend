@@ -14,7 +14,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,35 +25,35 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Personaje {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	private String urlImagen;
-	
+
 	@NotBlank
 	@Size(max = 60)
 	@Column(unique = true)
 	private String nombre;
-	
+
 	@Min(0)
 	@Max(200)
 	@NotNull
 	private int edad;
-	
+
 	@Min(0)
 	@Max(5000)
 	@NotNull
 	private double peso;
-	
+
 	private String historia;
-	
+
 	@ManyToMany(mappedBy = "personajes")
-	@JsonManagedReference
 	private List<Audiovisual> audiovisuales;
-	
+
 	public boolean esNulo() {
 		return false;
 	}
