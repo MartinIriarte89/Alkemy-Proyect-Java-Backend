@@ -1,6 +1,9 @@
 package com.disneyapi.dto;
 
+import java.time.LocalDate;
+
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
@@ -12,11 +15,14 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetPersonajeDto {
+public class GetAudiovisualDto {
 
 	private String urlImagen;
 	
 	@NotBlank
-	@Size(max = 50)
-	private String nombre;
+	@Size(max = 150)
+	private String titulo;
+	
+	@NotNull
+	private LocalDate fechaDeCreacion;
 }

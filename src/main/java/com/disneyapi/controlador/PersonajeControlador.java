@@ -68,7 +68,7 @@ public class PersonajeControlador {
 			if(personajes.isEmpty()) {
 				return ResponseEntity.notFound().build();
 			}
-			Page<GetPersonajeDto> getPersonajesDto = personajes.map(personaje -> converter.convertirPersonajeAGetPersonajeDto(personaje));
+			Page<GetPersonajeDto> getPersonajesDto = personajes.map(converter::convertirPersonajeAGetPersonajeDto);
 			UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(request.getRequestURL().toString());
 			
 			return ResponseEntity.ok().header("link", paginacionLinks.crearLinkHeader(getPersonajesDto, builder))
