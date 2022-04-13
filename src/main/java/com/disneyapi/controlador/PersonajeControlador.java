@@ -76,6 +76,16 @@ public class PersonajeControlador {
 		}
 	}
 	
+	@GetMapping("/{id}")
+	public ResponseEntity<Personaje> obtenerDetallePersonaje(@PathVariable Long id){
+		Personaje personaje = personajeServicio.buscarPorId(id).orElse(PersonajeNulo.construir());
+		
+		if(personaje.esNulo())
+			return ResponseEntity.notFound().build();
+		else
+			return ResponseEntity.ok(personaje);
+	}
+	
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Personaje> nuevoPersonaje(
 			@Valid @RequestPart("personaje") CrearYEditarPersonajeDto personajeDto,
