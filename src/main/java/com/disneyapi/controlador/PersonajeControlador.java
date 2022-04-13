@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +13,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +28,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.disneyapi.dto.CrearYEditarPersonajeDto;
 import com.disneyapi.dto.GetPersonajeDto;
+import com.disneyapi.error.exception.ValidacionException;
 import com.disneyapi.modelo.Personaje;
 import com.disneyapi.modelo.objetonulo.PersonajeNulo;
 import com.disneyapi.servicio.PersonajeServicio;
@@ -75,8 +78,11 @@ public class PersonajeControlador {
 	
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Personaje> nuevoPersonaje(
-			@RequestPart("personaje") CrearYEditarPersonajeDto personajeDto,
-			@RequestPart("imagen") MultipartFile imagen){
+			@Valid @RequestPart("personaje") CrearYEditarPersonajeDto personajeDto,
+			@RequestPart("imagen") MultipartFile imagen, Errors errores){
+		if(errores.hasErrors()) {
+			throw new ValidacionException(errores);
+		}
 		Personaje personaje = personajeServicio
 					.guardarImagenYAgregarUrlImagen(
 							converter.convertirCrearYEditarPersonajeDtoAPersonaje(personajeDto), imagen);	
@@ -87,8 +93,11 @@ public class PersonajeControlador {
 	@PutMapping(name = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Personaje> actualizarPersonaje(
 			@PathVariable Long id,
-			@RequestPart("personaje") CrearYEditarPersonajeDto personajeDto,
-			@RequestPart("imagen") MultipartFile imagen){
+			@Valid @RequestPart("personaje") CrearYEditarPersonajeDto personajeDto,
+			@RequestPart("imagen") MultipartFile imagen, Errors errores){
+		if(errores.hasErrors()) {
+			throw new ValidacionException(errores);
+		}
 		Personaje personaje = personajeServicio.editar(
 				id, converter.convertirCrearYEditarPersonajeDtoAPersonaje(personajeDto), imagen);
 		
