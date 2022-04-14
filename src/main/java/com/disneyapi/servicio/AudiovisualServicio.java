@@ -15,7 +15,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
+import com.disneyapi.controlador.FicheroControlador;
 import com.disneyapi.modelo.Audiovisual;
 import com.disneyapi.repositorio.AudiovisualRepositorio;
 import com.disneyapi.servicio.base.BaseServicio;
@@ -38,7 +40,7 @@ public class AudiovisualServicio extends BaseServicio<Audiovisual, Long, Audiovi
 	public Page<Audiovisual> buscarPorArgs(Optional<String> genero, Optional<String> orden, Pageable pageable) {
 
 		Specification<Audiovisual> specGeneroAudiovisual = new Specification<Audiovisual>() {
-			
+
 			private static final long serialVersionUID = -1901426456386321439L;
 
 			@Override
@@ -60,19 +62,39 @@ public class AudiovisualServicio extends BaseServicio<Audiovisual, Long, Audiovi
 				pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
 						Sort.by(Sort.Order.desc("fechaDeCreacion")));
 		}
-		
+
 		return this.repositorio.findAll(specGeneroAudiovisual, pageable);
 	}
 
-	public Audiovisual guardarImagenYAgregarUrlImagen(Audiovisual convertirCrearYEditarAudiovisualDtoAAudiovisual,
-			MultipartFile imagen) {
-		
-		return null;
+	public Audiovisual guardarImagenYAgregarUrlImagen(Audiovisual audiovisual, MultipartFile archivo) {
+
+		if (!archivo.isEmpty()) {
+			String imagen = almacenamientoServicio.guardar(archivo);
+			String urlImagen = MvcUriComponentsBuilder
+					.fromMethodName(FicheroControlador.class, "serveFile", imagen, null).build().toUriString();
+			audiovisual.setUrlImagen(urlImagen);
+		}
+
+		return audiovisual;
 	}
 
-	public Audiovisual editar(Long id, Audiovisual convertirCrearYEditarAudiovisualDtoAAudiovisual,
-			MultipartFile imagen) {
-		return null;
+	public Audiovisual editar(Long id, Audiovisual audiovisual, MultipartFile archivo) {
+
+		if (existePorId(id)) {
+			audiovisual.setId(id);
+
+			if (!archivo.isEmpty()) {
+				String imagen = almacenamientoServicio.guardar(archivo);
+				String urlImagen = MvcUriComponentsBuilder
+						.fromMethodName(FicheroControlador.class, "serveFile", imagen, null).build().toUriString();
+				// Chequear el caso en que la imagen sea almacenada por primera vez con la
+				// edicion.
+				almacenamientoServicio.borrar(audiovisual.getUrlImagen());
+				audiovisual.setUrlImagen(urlImagen);
+			}
+
+			return editar(audiovisual);
+		} else
+			return audiovisual;
 	}
-	
 }
