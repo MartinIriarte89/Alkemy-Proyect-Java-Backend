@@ -28,9 +28,14 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.disneyapi.dto.CrearYEditarAudiovisualDto;
 import com.disneyapi.dto.GetAudiovisualDto;
+import com.disneyapi.error.exception.PersonajeNoEstaEnAudiovisualException;
+import com.disneyapi.error.exception.PersonajeYaSeEncuentraException;
 import com.disneyapi.modelo.Audiovisual;
+import com.disneyapi.modelo.Personaje;
 import com.disneyapi.modelo.objetonulo.AudiovisualNulo;
+import com.disneyapi.modelo.objetonulo.PersonajeNulo;
 import com.disneyapi.servicio.AudiovisualServicio;
+import com.disneyapi.servicio.PersonajeServicio;
 import com.disneyapi.util.converter.AudiovisualDtoConverter;
 import com.disneyapi.util.paginacion.PaginacionLinks;
 
@@ -42,6 +47,7 @@ import lombok.RequiredArgsConstructor;
 public class AudiovisualControlador {
 
 	private final AudiovisualServicio audiovisualServicio;
+	private final PersonajeServicio personajeServicio;
 	private final AudiovisualDtoConverter converter;
 	private final PaginacionLinks paginacionLinks;
 
@@ -125,5 +131,42 @@ public class AudiovisualControlador {
 		}
 		audiovisualServicio.borrar(audiovisual);
 		return ResponseEntity.noContent().build();
+	}
+	
+	@PostMapping("/{idAudiovisual}/characters/{idPersonaje}")
+	public ResponseEntity<Audiovisual> agregarPersonajeAAudiovisual(
+			@PathVariable Long idAudiovisual,
+			@PathVariable Long idPersonaje){
+		Audiovisual audiovisual = audiovisualServicio.buscarPorId(idAudiovisual).orElse(AudiovisualNulo.contruir());
+		Personaje personaje = personajeServicio.buscarPorId(idPersonaje).orElse(PersonajeNulo.construir()); 
+		
+		if(personaje.esNulo() || audiovisual.esNula()) {
+			return ResponseEntity.notFound().build();
+		}
+		
+		else if(audiovisual.contieneA(personaje)) {
+			throw new PersonajeYaSeEncuentraException(personaje.getNombre());
+		}
+		audiovisual.agregarA(personaje);
+		
+		return ResponseEntity.status(HttpStatus.CREATED).body(audiovisualServicio.guardar(audiovisual));
+	}
+	
+	@DeleteMapping("/{idAudiovisual}/characters/{idPersonaje}")
+	public ResponseEntity<Audiovisual> eliminarPersonajeDeAudiovisual(
+			@PathVariable Long idAudiovisual,
+			@PathVariable Long idPersonaje){
+		Audiovisual audiovisual = audiovisualServicio.buscarPorId(idAudiovisual).orElse(AudiovisualNulo.contruir());
+		Personaje personaje = personajeServicio.buscarPorId(idPersonaje).orElse(PersonajeNulo.construir()); 
+		
+		if(personaje.esNulo() || audiovisual.esNula()) {
+			return ResponseEntity.notFound().build();
+		}
+		else if(!audiovisual.contieneA(personaje)) {
+			throw new PersonajeNoEstaEnAudiovisualException(personaje.getNombre());
+		}
+		audiovisual.eliminarA(personaje);
+		
+		return ResponseEntity.ok(audiovisualServicio.guardar(audiovisual));
 	}
 }

@@ -63,4 +63,17 @@ public abstract class Audiovisual {
 	private Genero genero;
 
 	public abstract boolean esNula();
+
+	public void agregarA(Personaje personaje) {
+		this.personajes.add(personaje);
+		
+	}
+
+	public boolean contieneA(Personaje personaje) {
+		return this.personajes.contains(personaje);
+	}
+
+	public void eliminarA(Personaje personaje) {
+		this.personajes.remove(personaje);
+	}
 }
