@@ -1,6 +1,6 @@
 package com.disneyapi.seguridad;
 
-/*import java.util.Date;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -17,6 +17,9 @@ import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
+import com.disneyapi.modelo.Usuario;
+import com.disneyapi.servicio.UsuarioServicio;
+import com.disneyapi.util.enumerados.RolUsuario;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,10 +29,10 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class JwtProveedor {
 
-	@Value("${jwt.secret}")
+	@Value("${jwt.secreto}")
 	private String jwtSecreto;
 
-	@Value("${jwt.expiration}")
+	@Value("${jwt.expiracion}")
 	private int jwtDuracionEnSeg;
 	
 	private final UsuarioServicio usuarioServicio;
@@ -42,7 +45,7 @@ public class JwtProveedor {
 	
 
 	public String generarToken(String username) {
-		Usuario usuario = usuarioServicio.buscarPorEmail(username);
+		Usuario usuario = usuarioServicio.buscarPorNombreUsuario(username).orElse(null);
 		
 		Date fechaExpiracionToken = new Date(System.currentTimeMillis() + (jwtDuracionEnSeg * 1000));
 		String rolesConFormato = usuario.getRoles().stream()
@@ -54,7 +57,7 @@ public class JwtProveedor {
 							.withIssuedAt(new Date())
 							.withExpiresAt(fechaExpiracionToken)
 							.withClaim("roles", rolesConFormato)
-							.withClaim("username", usuario.getEmail())
+							.withClaim("username", usuario.getNombreUsuario())
 							.sign(algoritmo);
 	}
 	
@@ -91,5 +94,6 @@ public class JwtProveedor {
 		} catch (AlgorithmMismatchException e) {
 			log.info("Token JWT no soportado: " + e.getMessage());
 		}
+		return false;
 	}
-}*/
+}
