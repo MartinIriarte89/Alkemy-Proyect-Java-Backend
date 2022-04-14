@@ -16,8 +16,8 @@ import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.auth0.jwt.interfaces.JWTVerifier;
 import com.disneyapi.modelo.Usuario;
+import com.disneyapi.modelo.objetonulo.UsuarioNulo;
 import com.disneyapi.servicio.UsuarioServicio;
 import com.disneyapi.util.enumerados.RolUsuario;
 
@@ -36,8 +36,6 @@ public class JwtProveedor {
 	private int jwtDuracionEnSeg;
 	
 	private final UsuarioServicio usuarioServicio;
-	private final Algorithm algoritmo = Algorithm.HMAC256(jwtSecreto.getBytes());
-	private final JWTVerifier verificador = JWT.require(algoritmo).build();
 	public static final String TOKEN_HEADER = "Authorization";
 	public static final String TOKEN_PREFIX = "Bearer ";
 	public static final String TOKEN_TYPE = "JWT";
@@ -45,7 +43,7 @@ public class JwtProveedor {
 	
 
 	public String generarToken(String username) {
-		Usuario usuario = usuarioServicio.buscarPorNombreUsuario(username).orElse(null);
+		Usuario usuario = usuarioServicio.buscarPorNombreUsuario(username).orElseThrow();
 		
 		Date fechaExpiracionToken = new Date(System.currentTimeMillis() + (jwtDuracionEnSeg * 1000));
 		String rolesConFormato = usuario.getRoles().stream()
@@ -58,30 +56,30 @@ public class JwtProveedor {
 							.withExpiresAt(fechaExpiracionToken)
 							.withClaim("roles", rolesConFormato)
 							.withClaim("username", usuario.getNombreUsuario())
-							.sign(algoritmo);
+							.sign(construirAlgotirmo());
 	}
 	
 	public Long obtenerIdDeJWT(String token) {
-		DecodedJWT jwtDecodificado = verificador.verify(token);
+		DecodedJWT jwtDecodificado = decodificar(token);
 		
 		return Long.parseLong(jwtDecodificado.getSubject());
 	}
 	
 	public List<String> obtenerRolesDeJWT(String token){
-		DecodedJWT jwtDecodificado = verificador.verify(token);
+		DecodedJWT jwtDecodificado = decodificar(token);
 		
 		return jwtDecodificado.getClaim("roles").asList(String.class);
 	}
 	
 	public String obtenerUsernameDeJWT(String token) {
-		DecodedJWT jwtDecodificado = verificador.verify(token);
+		DecodedJWT jwtDecodificado = decodificar(token);
 		
 		return jwtDecodificado.getClaim("username").asString();
 	}
 	
 	public boolean esValido(String token) {
 		try {
-			verificador.verify(token);
+			decodificar(token);
 			return true;
 		}catch (JWTDecodeException e) {
 			log.info("Token malformado: " + e.getMessage());
@@ -95,5 +93,13 @@ public class JwtProveedor {
 			log.info("Token JWT no soportado: " + e.getMessage());
 		}
 		return false;
+	}
+	
+	private Algorithm construirAlgotirmo() {
+		return Algorithm.HMAC256(jwtSecreto.getBytes());
+	}
+	
+	private DecodedJWT decodificar(String token) {
+		return JWT.require(construirAlgotirmo()).build().verify(token);
 	}
 }

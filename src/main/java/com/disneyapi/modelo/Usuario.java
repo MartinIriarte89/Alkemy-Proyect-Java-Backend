@@ -46,4 +46,8 @@ public class Usuario {
 	@ElementCollection(fetch = FetchType.EAGER)
 	@Enumerated(EnumType.STRING)
 	private List<RolUsuario> roles;
+	
+	public boolean esNulo() {
+		return false;
+	}
 }
