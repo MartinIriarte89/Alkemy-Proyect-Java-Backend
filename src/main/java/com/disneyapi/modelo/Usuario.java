@@ -32,7 +32,7 @@ public class Usuario {
 
 	@NotBlank
 	@Size(min = 6, max = 100)
-	private String nomnbreCompleto;
+	private String nombreCompleto;
 
 	@NotBlank
 	@Column(unique = true)
