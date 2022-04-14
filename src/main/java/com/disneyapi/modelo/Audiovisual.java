@@ -20,8 +20,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.disneyapi.util.serializador.AudiovisualSerializador;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -32,7 +32,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public abstract class Audiovisual {
 
 	@Id
@@ -55,6 +54,7 @@ public abstract class Audiovisual {
 	private double calificacion;
 
 	@ManyToMany
+	@JsonSerialize(using = AudiovisualSerializador.class)
 	@JoinTable(joinColumns = @JoinColumn(name = "producto_id"), inverseJoinColumns = @JoinColumn(name = "personaje_id"))
 	private List<Personaje> personajes;
 

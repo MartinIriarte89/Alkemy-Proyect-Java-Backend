@@ -14,8 +14,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.disneyapi.util.serializador.PersonajeSerializador;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,7 +25,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Personaje {
 
 	@Id
@@ -52,6 +51,7 @@ public class Personaje {
 	private String historia;
 
 	@ManyToMany(mappedBy = "personajes")
+	@JsonSerialize(using = PersonajeSerializador.class)
 	private List<Audiovisual> audiovisuales;
 
 	public boolean esNulo() {
