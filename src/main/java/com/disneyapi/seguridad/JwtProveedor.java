@@ -16,8 +16,8 @@ import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.disneyapi.error.exception.UsuarioNoEncontradoException;
 import com.disneyapi.modelo.Usuario;
-import com.disneyapi.modelo.objetonulo.UsuarioNulo;
 import com.disneyapi.servicio.UsuarioServicio;
 import com.disneyapi.util.enumerados.RolUsuario;
 
@@ -43,9 +43,10 @@ public class JwtProveedor {
 	
 
 	public String generarToken(String username) {
-		Usuario usuario = usuarioServicio.buscarPorNombreUsuario(username).orElseThrow();
+		Usuario usuario = usuarioServicio.buscarPorNombreUsuario(username)
+							.orElseThrow(() -> new UsuarioNoEncontradoException(username));
 		
-		Date fechaExpiracionToken = new Date(System.currentTimeMillis() + (jwtDuracionEnSeg * 1000));
+		Date fechaExpiracionToken = new Date(System.currentTimeMillis() + (jwtDuracionEnSeg * 100));
 		String rolesConFormato = usuario.getRoles().stream()
 													.map(RolUsuario::name)
 													.collect(Collectors.joining(", "));
