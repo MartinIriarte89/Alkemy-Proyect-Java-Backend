@@ -6,8 +6,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.disneyapi.modelo.Usuario;
 
-public interface UsuarioRepositorio extends JpaRepository<Usuario, Long>{
+public interface UsuarioRepositorio extends JpaRepository<Usuario, Long> {
 
 	Optional<Usuario> findByNombreUsuario(String nombreUsuario);
+
+	boolean existsByNombreUsuario(String nombreUsuario);
 
 }

@@ -11,7 +11,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.disneyapi.util.enumerados.RolUsuario;
@@ -40,8 +42,12 @@ public class Usuario {
 	private String nombreUsuario;
 
 	@NotBlank
-	@Size(min = 5, max = 15)
+	@Size(min = 5)
 	private String contrasena;
+	
+	@Email
+	@NotNull
+	private String email;
 	
 	@ElementCollection(fetch = FetchType.EAGER)
 	@Enumerated(EnumType.STRING)

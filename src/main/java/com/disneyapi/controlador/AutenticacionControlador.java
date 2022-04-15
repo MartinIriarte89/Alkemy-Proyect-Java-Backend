@@ -53,6 +53,9 @@ public class AutenticacionControlador {
 		if(!usuarioRegistroDto.getContrasena().equals(usuarioRegistroDto.getContrasenaRepetida())) {
 			throw new ContrasenasNoCoincidenException();
 		}
+		if(usuarioServicio.existePorNombreUsuario(usuarioRegistroDto.getNombreUsuario())) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		}
 		
 		Usuario usuario = converter.convertirUsuarioRegistroDtoAUsuario(usuarioRegistroDto);
 		usuario.setRoles(Arrays.asList(RolUsuario.ROLE_USER));

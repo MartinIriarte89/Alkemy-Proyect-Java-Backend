@@ -1,6 +1,8 @@
 package com.disneyapi.dto;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
@@ -29,4 +31,8 @@ public class UsuarioRegistroDto {
 	@NotBlank
 	@Size(min = 5, max = 15)
 	private String contrasenaRepetida;
+	
+	@NotNull
+	@Email
+	private String email;
 }

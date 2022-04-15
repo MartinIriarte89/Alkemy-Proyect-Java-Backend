@@ -18,4 +18,8 @@ public class UsuarioServicio extends BaseServicio<Usuario, Long, UsuarioReposito
 	public Optional<Usuario> buscarPorNombreUsuario(String nombreUsuario){
 		return this.repositorio.findByNombreUsuario(nombreUsuario);
 	}
+
+	public boolean existePorNombreUsuario(String nombreUsuario) {
+		return this.repositorio.existsByNombreUsuario(nombreUsuario);
+	}
 }
