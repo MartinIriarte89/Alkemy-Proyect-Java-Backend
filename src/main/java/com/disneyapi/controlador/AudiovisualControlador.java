@@ -144,7 +144,7 @@ public class AudiovisualControlador {
 			return ResponseEntity.notFound().build();
 		}
 		
-		else if(audiovisual.contieneA(personaje)) {
+		if(audiovisual.contieneA(personaje)) {
 			throw new PersonajeYaSeEncuentraException(personaje.getNombre());
 		}
 		audiovisual.agregarA(personaje);

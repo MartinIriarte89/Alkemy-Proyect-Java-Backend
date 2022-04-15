@@ -16,9 +16,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.disneyapi.dto.GetUsuarioDto;
 import com.disneyapi.dto.UsuarioLoginDto;
 import com.disneyapi.dto.UsuarioRegistroDto;
 import com.disneyapi.error.exception.ContrasenasNoCoincidenException;
+import com.disneyapi.error.exception.UsuarioYaExisteException;
 import com.disneyapi.modelo.Usuario;
 import com.disneyapi.seguridad.JwtProveedor;
 import com.disneyapi.servicio.UsuarioServicio;
@@ -31,7 +33,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AutenticacionControlador {
-	
+
 	private final AuthenticationManager authenticationManager;
 	private final JwtProveedor jwtProveedor;
 	private final UsuarioServicio usuarioServicio;
@@ -44,23 +46,24 @@ public class AutenticacionControlador {
 				usuarioRegistroDto.getUsername(), usuarioRegistroDto.getPassword()));
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		String jwtToken = jwtProveedor.generarToken(usuarioRegistroDto.getUsername());
-		
+
 		return ResponseEntity.status(HttpStatus.CREATED).body(jwtToken);
 	}
-	
+
 	@PostMapping("/register")
-	public ResponseEntity<Usuario> registro(@Valid @RequestBody UsuarioRegistroDto usuarioRegistroDto){
-		if(!usuarioRegistroDto.getContrasena().equals(usuarioRegistroDto.getContrasenaRepetida())) {
+	public ResponseEntity<GetUsuarioDto> registro(@Valid @RequestBody UsuarioRegistroDto usuarioRegistroDto) {
+		if (!usuarioRegistroDto.getContrasena().equals(usuarioRegistroDto.getContrasenaRepetida())) {
 			throw new ContrasenasNoCoincidenException();
 		}
-		if(usuarioServicio.existePorNombreUsuario(usuarioRegistroDto.getNombreUsuario())) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		if (usuarioServicio.existePorNombreUsuario(usuarioRegistroDto.getNombreUsuario())) {
+			throw new UsuarioYaExisteException(usuarioRegistroDto.getNombreUsuario());
 		}
-		
+
 		Usuario usuario = converter.convertirUsuarioRegistroDtoAUsuario(usuarioRegistroDto);
 		usuario.setRoles(Arrays.asList(RolUsuario.ROLE_USER));
 		usuario.setContrasena(encriptador.encode(usuario.getContrasena()));
-		
-		return ResponseEntity.status(HttpStatus.CREATED).body(usuarioServicio.guardar(usuario));
+		usuarioServicio.guardar(usuario);
+
+		return ResponseEntity.status(HttpStatus.CREATED).body(converter.convertirUsuarioAGetUsuarioDto(usuario));
 	}
 }

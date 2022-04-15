@@ -51,6 +51,7 @@ public class SeguridadConfig extends WebSecurityConfigurerAdapter {
 			.and()
 			.authorizeHttpRequests()
 				.antMatchers("/auth/**").permitAll()
+				.antMatchers("/h2-console/**").permitAll()
 				.antMatchers(HttpMethod.POST, Ruta.AUDIOVISUALES).hasRole(RolUsuario.ROLE_ADMIN.getRol())
 				.antMatchers(HttpMethod.PUT, Ruta.AUDIOVISUALES).hasRole(RolUsuario.ROLE_ADMIN.getRol())
 				.antMatchers( HttpMethod.DELETE, Ruta.AUDIOVISUALES).hasRole(RolUsuario.ROLE_ADMIN.getRol())
