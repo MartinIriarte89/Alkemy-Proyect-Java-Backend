@@ -15,7 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.disneyapi.filtro.AutorizacionFiltro;
-import com.disneyapi.util.constantes.Ruta;
+import com.disneyapi.util.constantes.RutaUtilidades;
 import com.disneyapi.util.enumerados.RolUsuario;
 
 import lombok.RequiredArgsConstructor;
@@ -52,14 +52,14 @@ public class SeguridadConfig extends WebSecurityConfigurerAdapter {
 			.authorizeHttpRequests()
 				.antMatchers("/auth/**").permitAll()
 				.antMatchers("/h2-console/**").permitAll()
-				.antMatchers(HttpMethod.POST, Ruta.AUDIOVISUALES).hasRole(RolUsuario.ROLE_ADMIN.getRol())
-				.antMatchers(HttpMethod.PUT, Ruta.AUDIOVISUALES).hasRole(RolUsuario.ROLE_ADMIN.getRol())
-				.antMatchers( HttpMethod.DELETE, Ruta.AUDIOVISUALES).hasRole(RolUsuario.ROLE_ADMIN.getRol())
-				.antMatchers(HttpMethod.POST, Ruta.PERSONAJES).hasRole(RolUsuario.ROLE_ADMIN.getRol())
-				.antMatchers(HttpMethod.PUT, Ruta.PERSONAJES).hasRole(RolUsuario.ROLE_ADMIN.getRol())
-				.antMatchers( HttpMethod.DELETE, Ruta.PERSONAJES).hasRole(RolUsuario.ROLE_ADMIN.getRol())
-				.antMatchers(HttpMethod.POST, Ruta.GENEROS).hasRole(RolUsuario.ROLE_ADMIN.getRol())
-				.antMatchers(Ruta.USUARIOS).hasRole(RolUsuario.ROLE_ADMIN.getRol())
+				.antMatchers(HttpMethod.POST, RutaUtilidades.AUDIOVISUALES).hasRole(RolUsuario.ROLE_ADMIN.getRol())
+				.antMatchers(HttpMethod.PUT, RutaUtilidades.AUDIOVISUALES).hasRole(RolUsuario.ROLE_ADMIN.getRol())
+				.antMatchers( HttpMethod.DELETE, RutaUtilidades.AUDIOVISUALES).hasRole(RolUsuario.ROLE_ADMIN.getRol())
+				.antMatchers(HttpMethod.POST, RutaUtilidades.PERSONAJES).hasRole(RolUsuario.ROLE_ADMIN.getRol())
+				.antMatchers(HttpMethod.PUT, RutaUtilidades.PERSONAJES).hasRole(RolUsuario.ROLE_ADMIN.getRol())
+				.antMatchers( HttpMethod.DELETE, RutaUtilidades.PERSONAJES).hasRole(RolUsuario.ROLE_ADMIN.getRol())
+				.antMatchers(HttpMethod.POST, RutaUtilidades.GENEROS).hasRole(RolUsuario.ROLE_ADMIN.getRol())
+				.antMatchers(RutaUtilidades.USUARIOS).hasRole(RolUsuario.ROLE_ADMIN.getRol())
 			.anyRequest().authenticated();
 		http.addFilterBefore(autorizacionFiltro, UsernamePasswordAuthenticationFilter.class);
 	}

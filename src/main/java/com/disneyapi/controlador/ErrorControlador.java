@@ -45,7 +45,6 @@ public class ErrorControlador extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler({ ValidacionException.class })
 	protected ResponseEntity<ApiError> exceptionRequestIncorrectaValidaciones(ValidacionException exception) {
-		exception.getErrores().stream().forEach(t -> System.out.println(t.toString()));
 		return construirErrorResponseEntity(HttpStatus.CONFLICT, exception.getMessage(), exception.getErrores());
 	}
 

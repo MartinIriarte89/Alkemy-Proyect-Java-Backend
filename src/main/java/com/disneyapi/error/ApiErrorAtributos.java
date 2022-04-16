@@ -25,10 +25,8 @@ public class ApiErrorAtributos extends DefaultErrorAttributes {
 		errorAttributes.put("fecha", LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")));
 
 		String mensaje = "";
-
 		Throwable throwable = getError(webRequest);
 		
-
 		if (throwable instanceof ResponseStatusException) {
 			ResponseStatusException responseStatusException = (ResponseStatusException) throwable;
 			mensaje = responseStatusException.getReason() == null ? "" : responseStatusException.getReason();
@@ -39,9 +37,7 @@ public class ApiErrorAtributos extends DefaultErrorAttributes {
 			else
 				mensaje = throwable.toString();
 		}
-
 		errorAttributes.put("mensaje", mensaje);
-		//errorAttributes.put("prueba", webRequest.getAttribute("org.springframework.boot.web.servlet.error.ErrorAttributes.error",0)	 );
 		
 		return errorAttributes;
 	}
