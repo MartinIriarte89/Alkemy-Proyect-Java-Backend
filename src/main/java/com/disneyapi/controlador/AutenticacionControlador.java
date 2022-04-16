@@ -11,6 +11,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,8 +22,10 @@ import com.disneyapi.dto.UsuarioLoginDto;
 import com.disneyapi.dto.UsuarioRegistroDto;
 import com.disneyapi.error.exception.ContrasenasNoCoincidenException;
 import com.disneyapi.error.exception.UsuarioYaExisteException;
+import com.disneyapi.error.exception.ValidacionException;
 import com.disneyapi.modelo.Usuario;
 import com.disneyapi.seguridad.JwtProveedor;
+import com.disneyapi.servicio.EmailServicio;
 import com.disneyapi.servicio.UsuarioServicio;
 import com.disneyapi.util.converter.UsuarioDtoConverter;
 import com.disneyapi.util.enumerados.RolUsuario;
@@ -39,9 +42,15 @@ public class AutenticacionControlador {
 	private final UsuarioServicio usuarioServicio;
 	private final UsuarioDtoConverter converter;
 	private final PasswordEncoder encriptador;
+	private final EmailServicio emailServicio;
 
 	@PostMapping("/login")
-	public ResponseEntity<String> autenticarse(@Valid @RequestBody UsuarioLoginDto usuarioRegistroDto) {
+	public ResponseEntity<String> autenticarse(
+			@Valid @RequestBody UsuarioLoginDto usuarioRegistroDto,
+			final Errors errores) {
+		if(errores.hasErrors()) {
+			throw new ValidacionException(errores.getAllErrors());
+		}
 		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
 				usuarioRegistroDto.getUsername(), usuarioRegistroDto.getPassword()));
 		SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -51,7 +60,13 @@ public class AutenticacionControlador {
 	}
 
 	@PostMapping("/register")
-	public ResponseEntity<GetUsuarioDto> registro(@Valid @RequestBody UsuarioRegistroDto usuarioRegistroDto) {
+	public ResponseEntity<GetUsuarioDto> registro(
+			@Valid @RequestBody UsuarioRegistroDto usuarioRegistroDto,
+			final Errors errores) {
+		if(errores.hasErrors()) {
+			throw new ValidacionException(errores.getAllErrors());
+		}
+		
 		if (!usuarioRegistroDto.getContrasena().equals(usuarioRegistroDto.getContrasenaRepetida())) {
 			throw new ContrasenasNoCoincidenException();
 		}
@@ -63,6 +78,7 @@ public class AutenticacionControlador {
 		usuario.setRoles(Arrays.asList(RolUsuario.ROLE_USER));
 		usuario.setContrasena(encriptador.encode(usuario.getContrasena()));
 		usuarioServicio.guardar(usuario);
+		emailServicio.enviarMail(usuario.getNombreCompleto(), usuario.getEmail());
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(converter.convertirUsuarioAGetUsuarioDto(usuario));
 	}

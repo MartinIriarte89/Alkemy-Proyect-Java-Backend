@@ -28,6 +28,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.disneyapi.dto.CrearYEditarPersonajeDto;
 import com.disneyapi.dto.GetPersonajeDto;
+import com.disneyapi.error.exception.PersonajeYaExisteException;
 import com.disneyapi.error.exception.ValidacionException;
 import com.disneyapi.modelo.Personaje;
 import com.disneyapi.modelo.objetonulo.PersonajeNulo;
@@ -89,9 +90,13 @@ public class PersonajeControlador {
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Personaje> nuevoPersonaje(
 			@Valid @RequestPart("personaje") CrearYEditarPersonajeDto personajeDto,
-			@RequestPart("imagen") MultipartFile imagen, Errors errores){
+			final Errors errores,
+			@RequestPart("imagen") MultipartFile imagen){
 		if(errores.hasErrors()) {
-			throw new ValidacionException(errores);
+			throw new ValidacionException(errores.getAllErrors());
+		}
+		if(personajeServicio.existePorNombre(personajeDto.getNombre())) {
+			throw new PersonajeYaExisteException(personajeDto.getNombre());
 		}
 		Personaje personaje = personajeServicio
 					.guardarImagenYAgregarUrlImagen(
@@ -104,13 +109,13 @@ public class PersonajeControlador {
 	public ResponseEntity<Personaje> actualizarPersonaje(
 			@PathVariable Long id,
 			@Valid @RequestPart("personaje") CrearYEditarPersonajeDto personajeDto,
-			@RequestPart("imagen") MultipartFile imagen, Errors errores){
-		if(errores.hasErrors()) {
-			throw new ValidacionException(errores);
-		}
+			final Errors errores,
+			@RequestPart("imagen") MultipartFile imagen){
 		Personaje personaje = personajeServicio.editar(
 				id, converter.convertirCrearYEditarPersonajeDtoAPersonaje(personajeDto), imagen);
-		
+		if(errores.hasErrors()) {
+			throw new ValidacionException(errores.getAllErrors());
+		}
 		if(personaje.esNulo())
 			return ResponseEntity.notFound().build();
 		else

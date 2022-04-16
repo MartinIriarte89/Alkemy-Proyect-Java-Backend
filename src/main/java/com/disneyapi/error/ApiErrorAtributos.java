@@ -27,6 +27,7 @@ public class ApiErrorAtributos extends DefaultErrorAttributes {
 		String mensaje = "";
 
 		Throwable throwable = getError(webRequest);
+		
 
 		if (throwable instanceof ResponseStatusException) {
 			ResponseStatusException responseStatusException = (ResponseStatusException) throwable;
@@ -40,7 +41,8 @@ public class ApiErrorAtributos extends DefaultErrorAttributes {
 		}
 
 		errorAttributes.put("mensaje", mensaje);
-
+		//errorAttributes.put("prueba", webRequest.getAttribute("org.springframework.boot.web.servlet.error.ErrorAttributes.error",0)	 );
+		
 		return errorAttributes;
 	}
 

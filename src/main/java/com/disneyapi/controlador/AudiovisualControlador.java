@@ -29,7 +29,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.disneyapi.dto.CrearYEditarAudiovisualDto;
 import com.disneyapi.dto.GetAudiovisualDto;
 import com.disneyapi.error.exception.PersonajeNoEstaEnAudiovisualException;
-import com.disneyapi.error.exception.PersonajeYaSeEncuentraException;
+import com.disneyapi.error.exception.PersonajeYaSeEncuentraEnException;
+import com.disneyapi.error.exception.ValidacionException;
 import com.disneyapi.modelo.Audiovisual;
 import com.disneyapi.modelo.Personaje;
 import com.disneyapi.modelo.objetonulo.AudiovisualNulo;
@@ -95,9 +96,10 @@ public class AudiovisualControlador {
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Audiovisual> nuevaAudiovisual(
 			@Valid @RequestPart("audiovisual") CrearYEditarAudiovisualDto audiovisualDto,
-			@RequestPart("imagen") MultipartFile imagen, Errors errores) {
+			final Errors errores,
+			@RequestPart("imagen") MultipartFile imagen) {
 		if (errores.hasErrors()) {
-
+			throw new ValidacionException(errores.getAllErrors());
 		}
 		Audiovisual audiovisual = audiovisualServicio.guardarImagenYAgregarUrlImagen(
 				converter.convertirCrearYEditarAudiovisualDtoAAudiovisual(audiovisualDto), imagen);
@@ -109,9 +111,10 @@ public class AudiovisualControlador {
 	public ResponseEntity<Audiovisual> editarAudiovisual(
 			@PathVariable Long id,
 			@Valid @RequestPart("audiovisual") CrearYEditarAudiovisualDto audiovisualDto,
-			@RequestPart("imagen") MultipartFile imagen, Errors errores){
+			final Errors errores,
+			@RequestPart("imagen") MultipartFile imagen){
 		if(errores.hasErrors()) {
-			
+			throw new ValidacionException(errores.getAllErrors());
 		}
 		Audiovisual audiovisual = audiovisualServicio.editar(
 				id, converter.convertirCrearYEditarAudiovisualDtoAAudiovisual(audiovisualDto), imagen);
@@ -145,7 +148,7 @@ public class AudiovisualControlador {
 		}
 		
 		if(audiovisual.contieneA(personaje)) {
-			throw new PersonajeYaSeEncuentraException(personaje.getNombre());
+			throw new PersonajeYaSeEncuentraEnException(personaje.getNombre());
 		}
 		audiovisual.agregarA(personaje);
 		

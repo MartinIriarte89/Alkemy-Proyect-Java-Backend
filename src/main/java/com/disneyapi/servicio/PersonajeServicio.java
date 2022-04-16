@@ -118,4 +118,8 @@ public class PersonajeServicio extends BaseServicio<Personaje, Long, PersonajeRe
 		} else
 			return personaje;
 	}
+
+	public boolean existePorNombre(String nombre) {
+		return this.repositorio.existsByNombre(nombre);
+	}
 }

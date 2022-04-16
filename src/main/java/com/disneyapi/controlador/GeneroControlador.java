@@ -3,6 +3,7 @@ package com.disneyapi.controlador;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,6 +11,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.disneyapi.dto.CrearGeneroDto;
+import com.disneyapi.error.exception.ValidacionException;
 import com.disneyapi.modelo.Genero;
 import com.disneyapi.servicio.GeneroServicio;
 import com.disneyapi.util.converter.GeneroDtoConverter;
@@ -50,8 +53,13 @@ public class GeneroControlador {
 	}
 
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<Genero> nuevoGenero(@RequestPart("genero") CrearGeneroDto generoDto,
+	public ResponseEntity<Genero> nuevoGenero(
+			@Valid @RequestPart("genero") CrearGeneroDto generoDto,
+			final Errors errores,
 			@RequestPart("imagen") MultipartFile imagen) {
+		if(errores.hasErrors()) {
+			throw new ValidacionException(errores.getAllErrors());
+		}
 		Genero genero = generoServicio
 				.guardarImagenYAgregarUrlImagen(converter.convertirCrearGeneroDtoAGenero(generoDto), imagen);
 

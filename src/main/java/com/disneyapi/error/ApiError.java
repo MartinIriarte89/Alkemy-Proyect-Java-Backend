@@ -1,8 +1,10 @@
 package com.disneyapi.error;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.ObjectError;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
@@ -32,4 +34,6 @@ public class ApiError {
 
 	@NonNull
 	private String mensaje;
+	
+	private List<ObjectError> errores;
 }

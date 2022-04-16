@@ -18,22 +18,22 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Controller
 @RequiredArgsConstructor
+@Controller
 public class FicheroControlador {
 
-	private final AlmacenamientoServicio almacenamientoServicio;
+	private final AlmacenamientoServicio storageService;
 
-	@GetMapping(value = "/files/{filename:.+}")
+	@GetMapping(value = "/files/{nombreArchivo:.+}")
 	@ResponseBody
 	public ResponseEntity<Resource> serveFile(@PathVariable String nombreArchivo, HttpServletRequest request) {
-		Resource archivo = almacenamientoServicio.cargarComoResource(nombreArchivo);
+		Resource archivo = storageService.cargarComoResource(nombreArchivo);
 
 		String contentType = null;
 		try {
 			contentType = request.getServletContext().getMimeType(archivo.getFile().getAbsolutePath());
 		} catch (IOException ex) {
-			log.info("No se pudo determinar el tipo de archivo.");
+			log.info("Could not determine file type.");
 		}
 
 		if (contentType == null) {
