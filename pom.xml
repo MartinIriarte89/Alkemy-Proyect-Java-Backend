@@ -15,7 +15,7 @@
 	<name>Alkemy-Proyect-Java-Backend</name>
 	<description>Proyecto de No Country</description>
 	<properties>
-		<java.version>11</java.version>
+		<java.version>15</java.version>
 	</properties>
 	<dependencies>
 		<dependency>

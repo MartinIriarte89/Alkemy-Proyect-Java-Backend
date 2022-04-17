@@ -11,6 +11,8 @@ public interface PersonajeRepositorio extends JpaRepository<Personaje, Long>, Jp
 
 	Optional<Personaje> findByNombre(String string);
 
-	boolean existsByNombre(String nombre);
+	Optional<Personaje> findByNombreIgnoreCase (String string);
+
+	boolean existsByNombreIgnoreCase(String nombre);
 
 }

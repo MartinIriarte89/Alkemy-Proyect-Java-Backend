@@ -10,5 +10,7 @@ import com.disneyapi.modelo.Audiovisual;
 public interface AudiovisualRepositorio
 		extends JpaRepository<Audiovisual, Long>, JpaSpecificationExecutor<Audiovisual> {
 
-	Optional<Audiovisual> findByTitulo(String titulo);
+	Optional<Audiovisual> findByTituloIgnoreCase(String titulo);
+
+	boolean existsByTituloIgnoreCase(String titulo);
 }

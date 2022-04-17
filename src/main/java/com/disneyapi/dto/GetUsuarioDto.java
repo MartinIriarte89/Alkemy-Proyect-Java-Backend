@@ -29,4 +29,6 @@ public class GetUsuarioDto {
 	@Email
 	@NotNull
 	private String email;
+	
+	private String token;
 }

@@ -55,10 +55,11 @@ public class MiConfiguracion {
 				.apiInfo(apiInfo());
 	}
 	
+	@Bean
 	public ApiInfo apiInfo() {
 		return new ApiInfoBuilder()
 				.title("Disney Api LATAM")
-				.description("Este proyecto es un proyecto para ser presentado en Alkemy.")
+				.description("Este proyecto es un trabajo para ser presentado en Alkemy.")
 				.version("1.0")
 				.contact(new Contact("Martin Iriarte", "https://github.com/MartinIriarte89", "iriartemartin2@gmail.com"))
 				.build();

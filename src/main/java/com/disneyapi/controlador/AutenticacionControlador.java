@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.disneyapi.dto.GetUsuarioDto;
 import com.disneyapi.dto.UsuarioLoginDto;
 import com.disneyapi.dto.UsuarioRegistroDto;
+import com.disneyapi.error.ApiError;
 import com.disneyapi.error.exception.ContrasenasNoCoincidenException;
+import com.disneyapi.error.exception.ErrorAlEnviarEmailRegistro;
 import com.disneyapi.error.exception.UsuarioYaExisteException;
 import com.disneyapi.error.exception.ValidacionException;
 import com.disneyapi.modelo.Usuario;
@@ -30,7 +32,12 @@ import com.disneyapi.servicio.UsuarioServicio;
 import com.disneyapi.util.converter.UsuarioDtoConverter;
 import com.disneyapi.util.enumerados.RolUsuario;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
 @RequestMapping("/auth")
@@ -43,11 +50,23 @@ public class AutenticacionControlador {
 	private final UsuarioDtoConverter converter;
 	private final PasswordEncoder encriptador;
 	private final EmailServicio emailServicio;
-
+	
+	@ApiOperation(value = "Loguearse", 
+			notes = "Provee un mecanismo para loguearse con un nombre de usuario y contraseña."
+					+ " Retorna un JWT en forma de cadena.")
+	@ApiResponses(value = { 
+			@ApiResponse(code = 200, message = "Created", response = Object.class),
+			@ApiResponse(code = 201, message = "Created", response = String.class),
+			@ApiResponse(code = 404, message = "Not Found", response = ApiError.class),
+			@ApiResponse(code = 400, message = "Bad Request", response = ApiError.class),
+			@ApiResponse(code = 409, message = "Conflict", response = ApiError.class),
+			@ApiResponse(code = 500, message = "Internal Server Error", response = ApiError.class)})
+	
 	@PostMapping("/login")
 	public ResponseEntity<String> autenticarse(
+			@ApiParam(value = "Representacion Json del usuario y contraseña necesarios para el logueo", required = true, type = "Json")
 			@Valid @RequestBody UsuarioLoginDto usuarioRegistroDto,
-			final Errors errores) {
+			@ApiIgnore final Errors errores) {
 		if(errores.hasErrors()) {
 			throw new ValidacionException(errores.getAllErrors());
 		}
@@ -59,10 +78,21 @@ public class AutenticacionControlador {
 		return ResponseEntity.status(HttpStatus.CREATED).body(jwtToken);
 	}
 
+	@ApiOperation(value = "Registrarse.", 
+			notes = "Provee un mecanismo para registrarse. Como parte del registro exitoso tambien "
+					+ " se envia en el cuerpo el jwt para no necesitar loguearse.")
+	@ApiResponses(value = { 
+			@ApiResponse(code = 200, message = "Created", response = Object.class),
+			@ApiResponse(code = 201, message = "Created", response = GetUsuarioDto.class),
+			@ApiResponse(code = 400, message = "Bad Request", response = ApiError.class),
+			@ApiResponse(code = 409, message = "Conflict", response = ApiError.class),
+			@ApiResponse(code = 500, message = "Internal Server Error", response = ApiError.class)})
+	
 	@PostMapping("/register")
 	public ResponseEntity<GetUsuarioDto> registro(
+			@ApiParam(value = "Representacion Json de un Usuario, necesario para llevar a cabo el registro", required = true, type = "Json")
 			@Valid @RequestBody UsuarioRegistroDto usuarioRegistroDto,
-			final Errors errores) {
+			@ApiIgnore final Errors errores) {
 		if(errores.hasErrors()) {
 			throw new ValidacionException(errores.getAllErrors());
 		}
@@ -78,8 +108,12 @@ public class AutenticacionControlador {
 		usuario.setRoles(Arrays.asList(RolUsuario.ROLE_USER));
 		usuario.setContrasena(encriptador.encode(usuario.getContrasena()));
 		usuarioServicio.guardar(usuario);
-		emailServicio.enviarMail(usuario.getNombreCompleto(), usuario.getEmail());
+		if(!emailServicio.enviarMail(usuario.getNombreCompleto(), usuario.getEmail())){
+			throw new ErrorAlEnviarEmailRegistro();
+		}
+		GetUsuarioDto usuarioDto = converter.convertirUsuarioAGetUsuarioDto(usuario);
+		usuarioDto.setToken(jwtProveedor.generarToken(usuarioDto.getNombreUsuario()));
 
-		return ResponseEntity.status(HttpStatus.CREATED).body(converter.convertirUsuarioAGetUsuarioDto(usuario));
+		return ResponseEntity.status(HttpStatus.CREATED).body(usuarioDto);
 	}
 }

@@ -21,6 +21,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.disneyapi.util.serializador.AudiovisualSerializador;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import lombok.AllArgsConstructor;
@@ -45,6 +47,7 @@ public abstract class Audiovisual {
 	@Column(unique = true)
 	private String titulo;
 
+	@JsonFormat(shape = Shape.STRING, pattern = "dd/MM/yyyy")
 	@NotNull
 	private LocalDate fechaDeCreacion;
 

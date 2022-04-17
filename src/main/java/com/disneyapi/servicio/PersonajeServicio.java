@@ -31,8 +31,12 @@ public class PersonajeServicio extends BaseServicio<Personaje, Long, PersonajeRe
 		this.almacenamientoServicio = almacenamientoServicio;
 	}
 
-	public Optional<Personaje> buscarPorNombre(Optional<String> nombre) {
-		return this.repositorio.findByNombre(nombre.get());
+	public Optional<Personaje> buscarPorNombre(String nombre) {
+		return this.repositorio.findByNombre(nombre);
+	}
+	
+	public Optional<Personaje> buscarPorNombreIgnoreCase(String nombre) {
+		return this.repositorio.findByNombreIgnoreCase(nombre);
 	}
 
 	public Page<Personaje> buscarPorArgs(Optional<Integer> edad, Optional<Double> peso, Optional<String> peliculaTitulo,
@@ -46,7 +50,7 @@ public class PersonajeServicio extends BaseServicio<Personaje, Long, PersonajeRe
 			public Predicate toPredicate(Root<Personaje> root, CriteriaQuery<?> query,
 					CriteriaBuilder criteriaBuilder) {
 				if (edad.isPresent()) {
-					return criteriaBuilder.equal(root.get("edad"), edad.get());
+					return criteriaBuilder.lessThanOrEqualTo(root.get("edad"), edad.get());
 				} else {
 					return criteriaBuilder.isTrue(criteriaBuilder.literal(true));
 				}
@@ -76,7 +80,7 @@ public class PersonajeServicio extends BaseServicio<Personaje, Long, PersonajeRe
 			public Predicate toPredicate(Root<Personaje> root, CriteriaQuery<?> query,
 					CriteriaBuilder criteriaBuilder) {
 				if (peliculaTitulo.isPresent()) {
-					return criteriaBuilder.equal(root.join("audiovisuales").get("titulo"), peliculaTitulo.get());
+					return criteriaBuilder.like(criteriaBuilder.lower(root.join("audiovisuales").get("titulo")), "%" + peliculaTitulo.get().toLowerCase() + "%");
 				} else {
 					return criteriaBuilder.isTrue(criteriaBuilder.literal(true));
 				}
@@ -120,6 +124,6 @@ public class PersonajeServicio extends BaseServicio<Personaje, Long, PersonajeRe
 	}
 
 	public boolean existePorNombre(String nombre) {
-		return this.repositorio.existsByNombre(nombre);
+		return this.repositorio.existsByNombreIgnoreCase(nombre);
 	}
 }

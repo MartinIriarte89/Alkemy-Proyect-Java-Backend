@@ -33,8 +33,8 @@ public class AudiovisualServicio extends BaseServicio<Audiovisual, Long, Audiovi
 		this.almacenamientoServicio = almacenamientoServicio;
 	}
 
-	public Optional<Audiovisual> buscarPorTitulo(String titulo) {
-		return this.repositorio.findByTitulo(titulo);
+	public Optional<Audiovisual> buscarPorTituloIgnoreCase(String titulo) {
+		return this.repositorio.findByTituloIgnoreCase(titulo);
 	}
 
 	public Page<Audiovisual> buscarPorArgs(Optional<String> genero, Optional<String> orden, Pageable pageable) {
@@ -96,5 +96,9 @@ public class AudiovisualServicio extends BaseServicio<Audiovisual, Long, Audiovi
 			return editar(audiovisual);
 		} else
 			return audiovisual;
+	}
+
+	public boolean existePorTitulo(String titulo) {
+		return this.repositorio.existsByTituloIgnoreCase(titulo);
 	}
 }
