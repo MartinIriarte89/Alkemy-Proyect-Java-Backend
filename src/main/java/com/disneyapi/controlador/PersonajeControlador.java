@@ -163,7 +163,7 @@ public class PersonajeControlador {
 			@ApiResponse(code = 409, message = "Conflict", response = ApiError.class),
 			@ApiResponse(code = 500, message = "Internal Server Error", response = ApiError.class)})
 	
-	@PutMapping(name = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Personaje> actualizarPersonaje(
 			@ApiParam(value = "Id del personaje que se desea editar", required = false, type = "int")
 			@PathVariable Long id,
@@ -172,15 +172,18 @@ public class PersonajeControlador {
 			@ApiIgnore final Errors errores,
 			@ApiParam(value = "Archivo de imagen perteneciente al personaje", required = false, type = "file")
 			@RequestPart("imagen") MultipartFile imagen){
-		Personaje personaje = personajeServicio.editar(
-				id, converter.convertirCrearYEditarPersonajeDtoAPersonaje(personajeDto), imagen);
 		if(errores.hasErrors()) {
 			throw new ValidacionException(errores.getAllErrors());
 		}
-		if(personaje.esNulo())
+		Personaje personaje = personajeServicio.buscarPorId(id).orElse(PersonajeNulo.construir());
+		
+		if(personaje.esNulo()) {
 			return ResponseEntity.notFound().build();
-		else
-			return ResponseEntity.ok(personaje);
+		}
+		personaje = converter.convertirCrearYEditarPersonajeDtoAPersonaje(personajeDto, personaje);
+		personaje = personajeServicio.guardarImagenYAgregarUrlImagen(personaje, imagen);
+			
+		return ResponseEntity.ok(personajeServicio.editar(personaje));
 	}
 	
 	@ApiOperation(value = "Borra un personaje", 

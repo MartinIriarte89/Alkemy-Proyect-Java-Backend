@@ -26,7 +26,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.disneyapi.dto.CrearYEditarAudiovisualDto;
+import com.disneyapi.dto.CrearAudiovisualDto;
+import com.disneyapi.dto.EditarAudiovisualDto;
 import com.disneyapi.dto.GetAudiovisualDto;
 import com.disneyapi.error.ApiError;
 import com.disneyapi.error.exception.AudiovisualYaExisteException;
@@ -138,7 +139,7 @@ public class AudiovisualControlador {
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Audiovisual> nuevaAudiovisual(
 			@ApiParam(value = "Representacion Json de la película o serie a crear.", required = true, type = "object") 
-			@Valid @RequestPart("audiovisual") CrearYEditarAudiovisualDto audiovisualDto,
+			@Valid @RequestPart("audiovisual") CrearAudiovisualDto audiovisualDto,
 			@ApiIgnore Errors errores,
 			@ApiParam(value = "Archivo de imagen para cargar en la película o serie.", required = false, type = "File")
 			@RequestPart("imagen") MultipartFile imagen) {
@@ -149,7 +150,7 @@ public class AudiovisualControlador {
 			throw new AudiovisualYaExisteException(audiovisualDto.getTitulo());
 		}
 		Audiovisual audiovisual = audiovisualServicio.guardarImagenYAgregarUrlImagen(
-				converter.convertirCrearYEditarAudiovisualDtoAAudiovisual(audiovisualDto), imagen);
+				converter.convertirCrearAudiovisualDtoAAudiovisual(audiovisualDto), imagen);
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(audiovisualServicio.guardar(audiovisual));
 	}
@@ -167,25 +168,27 @@ public class AudiovisualControlador {
 			@ApiResponse(code = 409, message = "Conflict", response = ApiError.class),
 			@ApiResponse(code = 500, message = "Internal Server Error", response = ApiError.class)})
 	
-	@PutMapping(name = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Audiovisual> editarAudiovisual(
 			@ApiParam(value = "El id de la película o serie que será editada.", required = true, type = "long") 
 			@PathVariable Long id,
 			@ApiParam(value = "Representacion Json de la película o serie a crear.", required = true, type = "object")
-			@Valid @RequestPart("audiovisual") CrearYEditarAudiovisualDto audiovisualDto,
+			@Valid @RequestPart("audiovisual") EditarAudiovisualDto audiovisualDto,
 			@ApiIgnore final Errors errores,
 			@ApiParam(value = "Archivo de imagen para cargar en la película o serie.", required = false, type = "File")
 			@RequestPart("imagen") MultipartFile imagen){
 		if(errores.hasErrors()) {
 			throw new ValidacionException(errores.getAllErrors());
 		}
-		Audiovisual audiovisual = audiovisualServicio.editar(
-				id, converter.convertirCrearYEditarAudiovisualDtoAAudiovisual(audiovisualDto), imagen);
+		Audiovisual audiovisual = audiovisualServicio.buscarPorId(id).orElse(AudiovisualNulo.contruir());
 		
-		if(audiovisual.esNula())
+		if(audiovisual.esNula()) {
 			return ResponseEntity.notFound().build();
-		else
-			return ResponseEntity.ok(audiovisual);
+		}
+		audiovisual = converter.convertirEditarAudiovisualDtoAAudiovisual(audiovisualDto, audiovisual);
+		audiovisual = audiovisualServicio.guardarImagenYAgregarUrlImagen(audiovisual, imagen);
+		
+		return ResponseEntity.ok(audiovisualServicio.editar(audiovisual));
 	}
 	
 	@ApiOperation(value = "Borra una película o serie", 

@@ -35,7 +35,7 @@ public class PersonajeSerializador extends StdSerializer<List<Audiovisual>> {
 			generator.writeFieldName("titulo");
 			generator.writeString(a.getTitulo());
 			generator.writeFieldName("fechaDeCreacion");
-			generator.writeString(a.getFechaDeCreacion()
+			generator.writeString(a.getFechaDeEstreno()
 									.format(DateTimeFormatter
 									.ofPattern("dd-MM-yyyy")));
 			generator.writeFieldName("calificacion");

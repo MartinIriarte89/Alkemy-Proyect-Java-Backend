@@ -40,6 +40,7 @@ public abstract class Audiovisual {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	
 	private String urlImagen;
 
 	@NotBlank
@@ -49,7 +50,7 @@ public abstract class Audiovisual {
 
 	@JsonFormat(shape = Shape.STRING, pattern = "dd/MM/yyyy")
 	@NotNull
-	private LocalDate fechaDeCreacion;
+	private LocalDate fechaDeEstreno;
 
 	@NotNull
 	@Min(0)
@@ -63,13 +64,13 @@ public abstract class Audiovisual {
 
 	@ManyToOne
 	@JoinColumn(name = "genero_id")
+	@NotNull
 	private Genero genero;
 
 	public abstract boolean esNula();
 
 	public void agregarA(Personaje personaje) {
 		this.personajes.add(personaje);
-		
 	}
 
 	public boolean contieneA(Personaje personaje) {

@@ -97,30 +97,14 @@ public class PersonajeServicio extends BaseServicio<Personaje, Long, PersonajeRe
 			String imagen = almacenamientoServicio.guardar(archivo);
 			String urlImagen = MvcUriComponentsBuilder
 					.fromMethodName(FicheroControlador.class, "serveFile", imagen, null).build().toUriString();
+			
+			if(personaje.getUrlImagen() != null) {
+				almacenamientoServicio.borrar(personaje.getUrlImagen());
+			}
 			personaje.setUrlImagen(urlImagen);
 		}
 
 		return personaje;
-	}
-
-	public Personaje editar(Long id, Personaje personaje, MultipartFile archivo) {
-
-		if (existePorId(id)) {
-			personaje.setId(id);
-
-			if (!archivo.isEmpty()) {
-				String imagen = almacenamientoServicio.guardar(archivo);
-				String urlImagen = MvcUriComponentsBuilder
-						.fromMethodName(FicheroControlador.class, "serveFile", imagen, null).build().toUriString();
-				// Chequear el caso en que la imagen sea almacenada por primera vez con la
-				// edicion.
-				almacenamientoServicio.borrar(personaje.getUrlImagen());
-				personaje.setUrlImagen(urlImagen);
-			}
-
-			return editar(personaje);
-		} else
-			return personaje;
 	}
 
 	public boolean existePorNombre(String nombre) {

@@ -72,30 +72,13 @@ public class AudiovisualServicio extends BaseServicio<Audiovisual, Long, Audiovi
 			String imagen = almacenamientoServicio.guardar(archivo);
 			String urlImagen = MvcUriComponentsBuilder
 					.fromMethodName(FicheroControlador.class, "serveFile", imagen, null).build().toUriString();
+			
+			if(audiovisual.getUrlImagen() != null) {
+				almacenamientoServicio.borrar(audiovisual.getUrlImagen());
+			}
 			audiovisual.setUrlImagen(urlImagen);
 		}
-
 		return audiovisual;
-	}
-
-	public Audiovisual editar(Long id, Audiovisual audiovisual, MultipartFile archivo) {
-
-		if (existePorId(id)) {
-			audiovisual.setId(id);
-
-			if (!archivo.isEmpty()) {
-				String imagen = almacenamientoServicio.guardar(archivo);
-				String urlImagen = MvcUriComponentsBuilder
-						.fromMethodName(FicheroControlador.class, "serveFile", imagen, null).build().toUriString();
-				// Chequear el caso en que la imagen sea almacenada por primera vez con la
-				// edicion.
-				almacenamientoServicio.borrar(audiovisual.getUrlImagen());
-				audiovisual.setUrlImagen(urlImagen);
-			}
-
-			return editar(audiovisual);
-		} else
-			return audiovisual;
 	}
 
 	public boolean existePorTitulo(String titulo) {
