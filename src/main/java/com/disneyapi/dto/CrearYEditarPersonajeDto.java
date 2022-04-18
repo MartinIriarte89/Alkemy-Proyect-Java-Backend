@@ -37,7 +37,8 @@ public class CrearYEditarPersonajeDto {
 	@NotNull
 	private double peso;
 	
-	@Size(max = 1500)
+	
 	@ApiModelProperty(value = "Un resumen del transfondo del personaje.", dataType = "String", example = "Pocahontas es la hija de Powhatan, el jefe de una tribu india de América del Norte. Un día observa la llegada de un grupo de colones ingleses, encabezados por el ambicioso gobernador Radcliff y el valiente capitán John Smith. Acompañada de sus compañeros animales, Pocahontas entabla una amistad con el capitán John Smith. Sin embargo, la ambición de los colonos hace que surjan tensiones entre las dos culturas. Entonces Pocahontas deberá encontrar una manera de lograr la paz entre los dos bandos.", allowableValues = "range[infinity,1500]", required = false, position = 4)
+	@Size(max = 1500)
 	private String historia;
 }

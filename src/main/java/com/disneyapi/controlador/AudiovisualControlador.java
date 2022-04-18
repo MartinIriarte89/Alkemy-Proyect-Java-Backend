@@ -136,9 +136,9 @@ public class AudiovisualControlador {
 			@ApiResponse(code = 409, message = "Conflict", response = ApiError.class),
 			@ApiResponse(code = 500, message = "Internal Server Error", response = ApiError.class)})
 	
-	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE ,MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity<Audiovisual> nuevaAudiovisual(
-			@ApiParam(value = "Representacion Json de la película o serie a crear.", required = true, type = "object") 
+			@ApiParam(value = "Representacion Json de la película o serie a crear.", required = true, type = "object",example = "") 
 			@Valid @RequestPart("audiovisual") CrearAudiovisualDto audiovisualDto,
 			@ApiIgnore Errors errores,
 			@ApiParam(value = "Archivo de imagen para cargar en la película o serie.", required = false, type = "File")

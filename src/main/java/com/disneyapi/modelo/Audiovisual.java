@@ -25,6 +25,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -34,34 +36,41 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@ApiModel(description = "Modela a las películas y las series", subTypes = {Pelicula.class, Serie.class})
 public abstract class Audiovisual {
 
+	@ApiModelProperty(value = "Id de la película o serie.", dataType = "long", example = "1", allowableValues = "range[1,infinity]", required = true, position = 1)
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	
+	@ApiModelProperty(value = "Url de la imagen de la película o serie.", dataType = "String", example = "http://miweb.com/files/mi_imagen", required = false, position = 2)
 	private String urlImagen;
 
+	@ApiModelProperty(value = "Título de la película o serie.", dataType = "String", example = "Pocahontas", allowableValues = "range[1,150]", required = true, position = 3)
 	@NotBlank
-	@Size(max = 70)
+	@Size(max = 150)
 	@Column(unique = true)
 	private String titulo;
 
+	@ApiModelProperty(value = "Fecha de lanzamiento de la película o serie.", dataType = "LocalDate", example = "1995-06-16", required = true, position = 4)
 	@JsonFormat(shape = Shape.STRING, pattern = "dd/MM/yyyy")
 	@NotNull
 	private LocalDate fechaDeEstreno;
 
+	@ApiModelProperty(value = "Calificación de la película o serie.", dataType = "double", example = "3.5", allowableValues = "range[0,5]", required = true, position = 5)
 	@NotNull
 	@Min(0)
 	@Max(5)
 	private double calificacion;
 
+	@ApiModelProperty(value = "List de Personaje, con los personajes que pertenecen a la película o serie", dataType = "List", required = false, position = 6)
 	@ManyToMany
 	@JsonSerialize(using = AudiovisualSerializador.class)
 	@JoinTable(joinColumns = @JoinColumn(name = "producto_id"), inverseJoinColumns = @JoinColumn(name = "personaje_id"))
 	private List<Personaje> personajes;
 
+	@ApiModelProperty(value = "Género al que pertenece la película o serie.", dataType = "object", required = true, position = 7)
 	@ManyToOne
 	@JoinColumn(name = "genero_id")
 	@NotNull
