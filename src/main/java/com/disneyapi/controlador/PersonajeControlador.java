@@ -125,7 +125,8 @@ public class PersonajeControlador {
 					+ " de administrador. Espera recibir un archivo que sea el personaje"
 					+ " con la key \"personaje\" y"
 					+ " otro archivo con la imagen del mismo con la key \"imagen\".")
-	@ApiResponses(value = { 
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "OK", response = Object.class),
 			@ApiResponse(code = 201, message = "Created", response = Personaje.class, responseContainer = "List"),
 			@ApiResponse(code = 400, message = "Bad Request", response = ApiError.class),
 			@ApiResponse(code = 409, message = "Conflict", response = ApiError.class),
@@ -133,7 +134,7 @@ public class PersonajeControlador {
 	
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Personaje> nuevoPersonaje(
-			@ApiParam(value = "Representación Json del personaje a guardar", required = true, type = "Json")
+			@ApiParam(value = "Representación Json del personaje a guardar. Se espera un CrearYEditarPersonajeDto, chequear el modelo.", required = true, type = "Json")
 			@Valid @RequestPart("personaje") CrearYEditarPersonajeDto personajeDto,
 			@ApiIgnore final Errors errores,
 			@ApiParam(value = "Archivo de imagen perteneciente al personaje", required = false, type = "File")
@@ -157,6 +158,7 @@ public class PersonajeControlador {
 					+ " con la key \"personaje\" y"
 					+ " otro archivo con la imagen del mismo con la key\"imagen\".")
 	@ApiResponses(value = { 
+			@ApiResponse(code = 200, message = "OK", response = Object.class),
 			@ApiResponse(code = 201, message = "Created", response = Personaje.class),
 			@ApiResponse(code = 404, message = "Not Found", response = ApiError.class),
 			@ApiResponse(code = 400, message = "Bad Request", response = ApiError.class),
@@ -167,7 +169,7 @@ public class PersonajeControlador {
 	public ResponseEntity<Personaje> actualizarPersonaje(
 			@ApiParam(value = "Id del personaje que se desea editar", required = false, type = "int")
 			@PathVariable Long id,
-			@ApiParam(value = "Representación Json del personaje a guardar", required = true, type = "object")
+			@ApiParam(value = "Representación Json del personaje a guardar. Se espera un CrearYEditarPersonajeDto, chequear el modelo.", required = true, type = "object")
 			@Valid @RequestPart("personaje") CrearYEditarPersonajeDto personajeDto,
 			@ApiIgnore final Errors errores,
 			@ApiParam(value = "Archivo de imagen perteneciente al personaje", required = false, type = "file")
@@ -189,8 +191,8 @@ public class PersonajeControlador {
 	@ApiOperation(value = "Borra un personaje", 
 			notes = "Provee un mecanismo para eliminar un personaje existente, se requiere permisos"
 					+ " de administrador.")
-	@ApiResponses(value = { 
-			@ApiResponse(code = 204, message = "No Content", response = Personaje.class),
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "OK", response = Object.class),
 			@ApiResponse(code = 404, message = "Not Found", response = ApiError.class),
 			@ApiResponse(code = 500, message = "Internal Server Error", response = ApiError.class)})
 	

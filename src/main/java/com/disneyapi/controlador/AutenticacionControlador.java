@@ -55,7 +55,7 @@ public class AutenticacionControlador {
 			notes = "Provee un mecanismo para loguearse con un nombre de usuario y contraseña."
 					+ " Retorna un JWT en forma de cadena.")
 	@ApiResponses(value = { 
-			@ApiResponse(code = 200, message = "Created", response = Object.class),
+			@ApiResponse(code = 200, message = "OK", response = Object.class),
 			@ApiResponse(code = 201, message = "Created", response = String.class),
 			@ApiResponse(code = 404, message = "Not Found", response = ApiError.class),
 			@ApiResponse(code = 400, message = "Bad Request", response = ApiError.class),
@@ -82,7 +82,7 @@ public class AutenticacionControlador {
 			notes = "Provee un mecanismo para registrarse. Como parte del registro exitoso tambien "
 					+ " se envia en el cuerpo el jwt para no necesitar loguearse.")
 	@ApiResponses(value = { 
-			@ApiResponse(code = 200, message = "Created", response = Object.class),
+			@ApiResponse(code = 200, message = "OK", response = Object.class),
 			@ApiResponse(code = 201, message = "Created", response = GetUsuarioDto.class),
 			@ApiResponse(code = 400, message = "Bad Request", response = ApiError.class),
 			@ApiResponse(code = 409, message = "Conflict", response = ApiError.class),

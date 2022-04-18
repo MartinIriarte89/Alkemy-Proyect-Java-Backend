@@ -73,6 +73,7 @@ public class GeneroControlador {
 	@ApiOperation(value = "Crear un género", 
 			notes = "Provee un mecanismo para crear un género nuevo. Se necesitan permisos de administrador")
 	@ApiResponses(value = { 
+			@ApiResponse(code = 200, message = "OK", response = Object.class),
 			@ApiResponse(code = 201, message = "Created", response = Genero.class),
 			@ApiResponse(code = 400, message = "Bad Request", response = ApiError.class),
 			@ApiResponse(code = 409, message = "Conflict", response = ApiError.class),
