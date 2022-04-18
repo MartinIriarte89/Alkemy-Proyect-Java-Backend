@@ -31,6 +31,7 @@ import com.disneyapi.dto.EditarAudiovisualDto;
 import com.disneyapi.dto.GetAudiovisualDto;
 import com.disneyapi.error.ApiError;
 import com.disneyapi.error.exception.AudiovisualYaExisteException;
+import com.disneyapi.error.exception.ErrorTipoAudiovisual;
 import com.disneyapi.error.exception.PersonajeNoEstaEnAudiovisualException;
 import com.disneyapi.error.exception.PersonajeYaSeEncuentraEnException;
 import com.disneyapi.error.exception.ValidacionException;
@@ -149,6 +150,10 @@ public class AudiovisualControlador {
 		if(audiovisualServicio.existePorTitulo(audiovisualDto.getTitulo())) {
 			throw new AudiovisualYaExisteException(audiovisualDto.getTitulo());
 		}
+		if(audiovisualDto.getTipo().equalsIgnoreCase("pelicula") || audiovisualDto.getTipo().equalsIgnoreCase("serie")) {
+			throw new ErrorTipoAudiovisual(audiovisualDto.getTipo());
+		}
+		
 		Audiovisual audiovisual = audiovisualServicio.guardarImagenYAgregarUrlImagen(
 				converter.convertirCrearAudiovisualDtoAAudiovisual(audiovisualDto), imagen);
 

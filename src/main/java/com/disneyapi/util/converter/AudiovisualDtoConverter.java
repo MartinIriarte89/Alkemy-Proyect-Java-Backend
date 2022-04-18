@@ -23,11 +23,10 @@ public class AudiovisualDtoConverter {
 	}
 
 	public Audiovisual convertirCrearAudiovisualDtoAAudiovisual(CrearAudiovisualDto audiovisualDto) {
-		if (audiovisualDto.getTipo().equalsIgnoreCase("pelicula")) {
+		if (audiovisualDto.getTipo().equalsIgnoreCase("pelicula"))
 			return mapper.map(audiovisualDto, Pelicula.class);
-		} else {
+		else
 			return mapper.map(audiovisualDto, Serie.class);
-		}
 	}
 
 	public Audiovisual convertirEditarAudiovisualDtoAAudiovisual(EditarAudiovisualDto audiovisualDto,

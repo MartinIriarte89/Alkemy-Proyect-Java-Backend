@@ -74,7 +74,7 @@ public class PersonajeControlador {
 			@RequestParam("age") Optional<Integer> edad,
 			@ApiParam(value = "Valor numérico para filtrar por peso, igual o menor que.", required = false, type = "int")
 			@RequestParam("weight") Optional<Double> peso,
-			@ApiParam(value = "Cadena para buscar personajes pertenecientes a la película o serie dada.", required = false, type = "String")
+			@ApiParam(value = "Cadena para filtrar personajes pertenecientes a la película o serie dada.", required = false, type = "String")
 			@RequestParam("movies") Optional<String>peliculaTitulo,
 			@ApiIgnore @PageableDefault(size = 20, page = 0) Pageable pageable, 
 			@ApiIgnore HttpServletRequest request){
