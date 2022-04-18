@@ -1,6 +1,8 @@
 package com.disneyapi.servicio;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -18,7 +20,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
 import com.disneyapi.controlador.FicheroControlador;
+import com.disneyapi.error.exception.GeneroNoExisteException;
+import com.disneyapi.error.exception.PersonajesNoExistenException;
 import com.disneyapi.modelo.Audiovisual;
+import com.disneyapi.modelo.Personaje;
 import com.disneyapi.repositorio.AudiovisualRepositorio;
 import com.disneyapi.servicio.base.BaseServicio;
 
@@ -26,11 +31,16 @@ import com.disneyapi.servicio.base.BaseServicio;
 public class AudiovisualServicio extends BaseServicio<Audiovisual, Long, AudiovisualRepositorio> {
 
 	private AlmacenamientoServicio almacenamientoServicio;
+	private final GeneroServicio generoServicio;
+	private final PersonajeServicio personajeServicio;
 
 	@Autowired
-	public AudiovisualServicio(AudiovisualRepositorio repositorio, AlmacenamientoServicio almacenamientoServicio) {
+	public AudiovisualServicio(AudiovisualRepositorio repositorio, AlmacenamientoServicio almacenamientoServicio,
+			GeneroServicio generoServicio, PersonajeServicio personajeServicio) {
 		super(repositorio);
 		this.almacenamientoServicio = almacenamientoServicio;
+		this.generoServicio = generoServicio;
+		this.personajeServicio = personajeServicio;
 	}
 
 	public Optional<Audiovisual> buscarPorTituloIgnoreCase(String titulo) {
@@ -83,5 +93,21 @@ public class AudiovisualServicio extends BaseServicio<Audiovisual, Long, Audiovi
 
 	public boolean existePorTitulo(String titulo) {
 		return this.repositorio.existsByTituloIgnoreCase(titulo);
+	}
+	
+	@Override
+	public Audiovisual guardar(Audiovisual audiovisual) {
+		try {
+			return this.repositorio.save(audiovisual);
+		}catch (RuntimeException e) {
+			if (!generoServicio.existePorId(audiovisual.getGenero().getId())) {
+				throw new GeneroNoExisteException(audiovisual.getGenero().getId());
+			} else {
+				audiovisual.getPersonajes().removeIf(p -> personajeServicio.existePorId(p.getId()));
+				List<Long> ids = audiovisual.getPersonajes().stream().map(Personaje::getId).collect(Collectors.toList());
+				
+				throw new PersonajesNoExistenException(ids.toString());
+			}
+	    }
 	}
 }

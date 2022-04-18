@@ -16,9 +16,11 @@ import com.disneyapi.error.exception.AlmacenamientoArchivoNoEncontradoException;
 import com.disneyapi.error.exception.AlmacenamientoException;
 import com.disneyapi.error.exception.AudiovisualYaExisteException;
 import com.disneyapi.error.exception.ContrasenasNoCoincidenException;
+import com.disneyapi.error.exception.GeneroNoExisteException;
 import com.disneyapi.error.exception.PersonajeNoEstaEnAudiovisualException;
 import com.disneyapi.error.exception.PersonajeYaExisteException;
 import com.disneyapi.error.exception.PersonajeYaSeEncuentraEnException;
+import com.disneyapi.error.exception.PersonajesNoExistenException;
 import com.disneyapi.error.exception.UsuarioNoEncontradoException;
 import com.disneyapi.error.exception.UsuarioYaExisteException;
 import com.disneyapi.error.exception.ValidacionException;
@@ -27,7 +29,8 @@ import com.disneyapi.error.exception.ValidacionException;
 public class ErrorControlador extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler({ AlmacenamientoArchivoNoEncontradoException.class, PersonajeNoEstaEnAudiovisualException.class,
-			UsuarioNoEncontradoException.class, AlmacenamientoException.class })
+			UsuarioNoEncontradoException.class, AlmacenamientoException.class, 
+			GeneroNoExisteException.class, PersonajesNoExistenException.class})
 	protected ResponseEntity<ApiError> exceptionNoEncontrado(RuntimeException exception) {
 		return construirErrorResponseEntity(HttpStatus.NOT_FOUND, exception.getMessage());
 	}
