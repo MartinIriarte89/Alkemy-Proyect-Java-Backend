@@ -129,6 +129,7 @@ public class AudiovisualControlador {
 					+ " de administrador. Espera recibir un archivo que sea la película o serie"
 					+ " con la key \"audiovisual\" y"
 					+ " otro archivo con la imagen del mismo con la key \"imagen\".")
+	
 	@ApiResponses(value = { 
 			@ApiResponse(code = 200, message = "OK", response = Object.class),
 			@ApiResponse(code = 201, message = "Created", response = Audiovisual.class),
@@ -136,9 +137,9 @@ public class AudiovisualControlador {
 			@ApiResponse(code = 409, message = "Conflict", response = ApiError.class),
 			@ApiResponse(code = 500, message = "Internal Server Error", response = ApiError.class)})
 	
-	@PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE ,MediaType.MULTIPART_FORM_DATA_VALUE})
+	@PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity<Audiovisual> nuevaAudiovisual(
-			@ApiParam(value = "Representacion Json de la película o serie a crear.", required = true, type = "object",example = "") 
+			@ApiParam(value = "Representacion Json de la película o serie a crear. Se espera un CrearAudiovisualDto, chequear el modelo.", required = true, type = "object") 
 			@Valid @RequestPart("audiovisual") CrearAudiovisualDto audiovisualDto,
 			@ApiIgnore Errors errores,
 			@ApiParam(value = "Archivo de imagen para cargar en la película o serie.", required = false, type = "File")
@@ -170,7 +171,7 @@ public class AudiovisualControlador {
 	
 	@PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Audiovisual> editarAudiovisual(
-			@ApiParam(value = "El id de la película o serie que será editada.", required = true, type = "long") 
+			@ApiParam(value = "El id de la película o serie que será editada. Se espera un EditarAudiovisualDto, chequear el modelo.", required = true, type = "long") 
 			@PathVariable Long id,
 			@ApiParam(value = "Representacion Json de la película o serie a crear.", required = true, type = "object")
 			@Valid @RequestPart("audiovisual") EditarAudiovisualDto audiovisualDto,

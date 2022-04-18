@@ -134,7 +134,7 @@ public class PersonajeControlador {
 	
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Personaje> nuevoPersonaje(
-			@ApiParam(value = "Representación Json del personaje a guardar", required = true, type = "Json")
+			@ApiParam(value = "Representación Json del personaje a guardar. Se espera un CrearYEditarPersonajeDto, chequear el modelo.", required = true, type = "Json")
 			@Valid @RequestPart("personaje") CrearYEditarPersonajeDto personajeDto,
 			@ApiIgnore final Errors errores,
 			@ApiParam(value = "Archivo de imagen perteneciente al personaje", required = false, type = "File")
@@ -169,7 +169,7 @@ public class PersonajeControlador {
 	public ResponseEntity<Personaje> actualizarPersonaje(
 			@ApiParam(value = "Id del personaje que se desea editar", required = false, type = "int")
 			@PathVariable Long id,
-			@ApiParam(value = "Representación Json del personaje a guardar", required = true, type = "object")
+			@ApiParam(value = "Representación Json del personaje a guardar. Se espera un CrearYEditarPersonajeDto, chequear el modelo.", required = true, type = "object")
 			@Valid @RequestPart("personaje") CrearYEditarPersonajeDto personajeDto,
 			@ApiIgnore final Errors errores,
 			@ApiParam(value = "Archivo de imagen perteneciente al personaje", required = false, type = "file")
