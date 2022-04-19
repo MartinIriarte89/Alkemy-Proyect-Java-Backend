@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.disneyapi.dto.GetUsuarioDto;
 import com.disneyapi.dto.UsuarioLoginDto;
 import com.disneyapi.dto.UsuarioRegistroDto;
+import com.disneyapi.dto.usuario.GetUsuarioDto;
 import com.disneyapi.error.ApiError;
 import com.disneyapi.error.exception.ContrasenasNoCoincidenException;
 import com.disneyapi.error.exception.ErrorAlEnviarEmailRegistro;

@@ -26,8 +26,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.disneyapi.dto.CrearYEditarPersonajeDto;
-import com.disneyapi.dto.GetPersonajeDto;
+import com.disneyapi.dto.personaje.CrearYEditarPersonajeDto;
+import com.disneyapi.dto.personaje.GetPersonajeDto;
 import com.disneyapi.error.ApiError;
 import com.disneyapi.error.exception.PersonajeYaExisteException;
 import com.disneyapi.error.exception.ValidacionException;

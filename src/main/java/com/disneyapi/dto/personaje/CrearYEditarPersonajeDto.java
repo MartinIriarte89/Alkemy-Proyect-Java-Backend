@@ -1,4 +1,4 @@
-package com.disneyapi.dto;
+package com.disneyapi.dto.personaje;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;

@@ -3,7 +3,7 @@ package com.disneyapi.util.converter;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
-import com.disneyapi.dto.CrearGeneroDto;
+import com.disneyapi.dto.genero.CrearGeneroDto;
 import com.disneyapi.modelo.Genero;
 
 import lombok.RequiredArgsConstructor;

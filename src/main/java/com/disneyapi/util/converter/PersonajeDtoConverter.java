@@ -3,8 +3,8 @@ package com.disneyapi.util.converter;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
-import com.disneyapi.dto.CrearYEditarPersonajeDto;
-import com.disneyapi.dto.GetPersonajeDto;
+import com.disneyapi.dto.personaje.CrearYEditarPersonajeDto;
+import com.disneyapi.dto.personaje.GetPersonajeDto;
 import com.disneyapi.modelo.Personaje;
 
 import lombok.RequiredArgsConstructor;

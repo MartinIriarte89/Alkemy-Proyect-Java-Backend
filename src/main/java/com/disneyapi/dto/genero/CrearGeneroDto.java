@@ -1,4 +1,4 @@
-package com.disneyapi.dto;
+package com.disneyapi.dto.genero;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;

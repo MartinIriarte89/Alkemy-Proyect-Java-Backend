@@ -3,8 +3,8 @@ package com.disneyapi.util.converter;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
-import com.disneyapi.dto.GetUsuarioDto;
 import com.disneyapi.dto.UsuarioRegistroDto;
+import com.disneyapi.dto.usuario.GetUsuarioDto;
 import com.disneyapi.modelo.Usuario;
 
 import lombok.RequiredArgsConstructor;

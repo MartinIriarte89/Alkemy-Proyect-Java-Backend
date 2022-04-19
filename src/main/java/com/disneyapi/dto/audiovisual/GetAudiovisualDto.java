@@ -1,4 +1,4 @@
-package com.disneyapi.dto;
+package com.disneyapi.dto.audiovisual;
 
 import java.time.LocalDate;
 
