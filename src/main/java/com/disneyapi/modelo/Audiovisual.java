@@ -67,7 +67,7 @@ public abstract class Audiovisual {
 	@ApiModelProperty(value = "List de Personaje, con los personajes que pertenecen a la película o serie", dataType = "List", required = false, position = 6)
 	@ManyToMany
 	@JsonSerialize(using = AudiovisualSerializador.class)
-	@JoinTable(joinColumns = @JoinColumn(name = "producto_id"), inverseJoinColumns = @JoinColumn(name = "personaje_id"))
+	@JoinTable(joinColumns = @JoinColumn(name = "audiovisual_id"), inverseJoinColumns = @JoinColumn(name = "personaje_id"))
 	private List<Personaje> personajes;
 
 	@ApiModelProperty(value = "Género al que pertenece la película o serie.", dataType = "object", required = true, position = 7)

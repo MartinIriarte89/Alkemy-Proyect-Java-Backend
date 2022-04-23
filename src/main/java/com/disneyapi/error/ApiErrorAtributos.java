@@ -25,6 +25,10 @@ public class ApiErrorAtributos extends DefaultErrorAttributes {
 		errorAttributes.put("fecha", LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")));
 
 		String mensaje = "";
+		if(getError(webRequest) == null) {
+			return errorAttributes;
+		}
+		
 		Throwable throwable = getError(webRequest);
 		
 		if (throwable instanceof ResponseStatusException) {
