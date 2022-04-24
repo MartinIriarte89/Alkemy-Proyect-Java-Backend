@@ -61,7 +61,7 @@ public class SeguridadConfig extends WebSecurityConfigurerAdapter {
 				//.antMatchers( HttpMethod.DELETE, RutaUtilidades.PERSONAJES).hasRole(RolUsuario.ROLE_ADMIN.getRol())
 				//.antMatchers(HttpMethod.POST, RutaUtilidades.GENEROS).hasRole(RolUsuario.ROLE_ADMIN.getRol())
 				//.antMatchers(RutaUtilidades.USUARIOS).hasRole(RolUsuario.ROLE_ADMIN.getRol())
-			.anyRequest().permitAll();
+			.anyRequest().authenticated();
 		http.addFilterBefore(autorizacionFiltro, UsernamePasswordAuthenticationFilter.class);
 	}
 }
