@@ -1,4 +1,4 @@
-package com.disneyapi.dto;
+package com.disneyapi.dto.usuario;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;

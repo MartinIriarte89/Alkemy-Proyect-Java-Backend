@@ -26,9 +26,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.disneyapi.dto.CrearAudiovisualDto;
-import com.disneyapi.dto.EditarAudiovisualDto;
-import com.disneyapi.dto.GetAudiovisualDto;
+import com.disneyapi.dto.audiovisual.CrearAudiovisualDto;
+import com.disneyapi.dto.audiovisual.EditarAudiovisualDto;
+import com.disneyapi.dto.audiovisual.GetAudiovisualDto;
 import com.disneyapi.error.ApiError;
 import com.disneyapi.error.exception.AudiovisualYaExisteException;
 import com.disneyapi.error.exception.ErrorTipoAudiovisual;

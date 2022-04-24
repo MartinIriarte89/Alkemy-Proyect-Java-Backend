@@ -3,9 +3,9 @@ package com.disneyapi.util.converter;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
-import com.disneyapi.dto.CrearAudiovisualDto;
-import com.disneyapi.dto.EditarAudiovisualDto;
-import com.disneyapi.dto.GetAudiovisualDto;
+import com.disneyapi.dto.audiovisual.CrearAudiovisualDto;
+import com.disneyapi.dto.audiovisual.EditarAudiovisualDto;
+import com.disneyapi.dto.audiovisual.GetAudiovisualDto;
 import com.disneyapi.modelo.Audiovisual;
 import com.disneyapi.modelo.Pelicula;
 import com.disneyapi.modelo.Serie;

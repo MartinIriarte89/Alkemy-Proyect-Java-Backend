@@ -50,18 +50,18 @@ public class SeguridadConfig extends WebSecurityConfigurerAdapter {
 				.frameOptions().disable()
 			.and()
 			.authorizeHttpRequests()
-				.antMatchers("/swagger-ui/**").permitAll()
-				.antMatchers("/auth/**").permitAll()
-				.antMatchers("/h2-console/**").permitAll()
-				//.antMatchers(HttpMethod.POST, RutaUtilidades.AUDIOVISUALES).hasRole(RolUsuario.ROLE_ADMIN.getRol())
-				//.antMatchers(HttpMethod.PUT, RutaUtilidades.AUDIOVISUALES).hasRole(RolUsuario.ROLE_ADMIN.getRol())
-				//.antMatchers( HttpMethod.DELETE, RutaUtilidades.AUDIOVISUALES).hasRole(RolUsuario.ROLE_ADMIN.getRol())
-				//.antMatchers(HttpMethod.POST, RutaUtilidades.PERSONAJES).hasRole(RolUsuario.ROLE_ADMIN.getRol())
-				//.antMatchers(HttpMethod.PUT, RutaUtilidades.PERSONAJES).hasRole(RolUsuario.ROLE_ADMIN.getRol())
-				//.antMatchers( HttpMethod.DELETE, RutaUtilidades.PERSONAJES).hasRole(RolUsuario.ROLE_ADMIN.getRol())
-				//.antMatchers(HttpMethod.POST, RutaUtilidades.GENEROS).hasRole(RolUsuario.ROLE_ADMIN.getRol())
-				//.antMatchers(RutaUtilidades.USUARIOS).hasRole(RolUsuario.ROLE_ADMIN.getRol())
-			.anyRequest().authenticated();
+				//.antMatchers("/swagger-ui.html/**").permitAll()
+				//.antMatchers("/auth/**").permitAll()
+				//.antMatchers("/h2-console/**").permitAll()
+				.antMatchers(HttpMethod.POST, RutaUtilidades.AUDIOVISUALES).hasRole(RolUsuario.ROLE_ADMIN.getRol())
+				.antMatchers(HttpMethod.PUT, RutaUtilidades.AUDIOVISUALES).hasRole(RolUsuario.ROLE_ADMIN.getRol())
+				.antMatchers( HttpMethod.DELETE, RutaUtilidades.AUDIOVISUALES).hasRole(RolUsuario.ROLE_ADMIN.getRol())
+				.antMatchers(HttpMethod.POST, RutaUtilidades.PERSONAJES).hasRole(RolUsuario.ROLE_ADMIN.getRol())
+				.antMatchers(HttpMethod.PUT, RutaUtilidades.PERSONAJES).hasRole(RolUsuario.ROLE_ADMIN.getRol())
+				.antMatchers( HttpMethod.DELETE, RutaUtilidades.PERSONAJES).hasRole(RolUsuario.ROLE_ADMIN.getRol())
+				.antMatchers(HttpMethod.POST, RutaUtilidades.GENEROS).hasRole(RolUsuario.ROLE_ADMIN.getRol())
+				.antMatchers(RutaUtilidades.USUARIOS).hasRole(RolUsuario.ROLE_ADMIN.getRol())
+			.anyRequest().permitAll();
 		http.addFilterBefore(autorizacionFiltro, UsernamePasswordAuthenticationFilter.class);
 	}
 }

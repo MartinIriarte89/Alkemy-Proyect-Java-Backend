@@ -61,9 +61,12 @@ public class AlkemyProyectJavaBackendApplication {
 			audiovisualServicio.guardar(peli);
 
 			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-			Usuario admin = new Usuario(null, "Martin Iriarte", "iriartemartin", encoder.encode("34770296"),
+			Usuario admin = new Usuario(null, "Martin Iriarte", "iriartemartin", encoder.encode("3477"),
 					"algo@algo.com", Arrays.asList(RolUsuario.ROLE_ADMIN));
+			Usuario user = new Usuario(null, "Alguien ConApellido", "usuario", encoder.encode("11111"),
+					"algo@algo.com", Arrays.asList(RolUsuario.ROLE_USER));
 			usuarioServicio.guardar(admin);
+			usuarioServicio.guardar(user);
 		};
 	}
 

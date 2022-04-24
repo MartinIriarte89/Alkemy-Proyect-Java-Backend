@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.disneyapi.dto.CrearGeneroDto;
+import com.disneyapi.dto.genero.CrearGeneroDto;
 import com.disneyapi.error.ApiError;
 import com.disneyapi.error.exception.ValidacionException;
 import com.disneyapi.modelo.Genero;
