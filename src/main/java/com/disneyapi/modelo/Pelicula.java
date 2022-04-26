@@ -22,6 +22,11 @@ public class Pelicula extends Audiovisual {
 		super(null, urlImagen, titulo, fechaDeCreacion, calificacion, personajes, genero);
 	}
 	
+	public Pelicula(Long id, String urlImagen, String titulo, LocalDate fechaDeCreacion, double calificacion,
+			List<Personaje> personajes, Genero genero) {
+		super(id, urlImagen, titulo, fechaDeCreacion, calificacion, personajes, genero);
+	}
+	
 	@Override
 	public boolean esNula() {
 		return false;
