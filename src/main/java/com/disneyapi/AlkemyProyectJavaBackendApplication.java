@@ -1,25 +1,7 @@
 package com.disneyapi;
 
-import java.time.LocalDate;
-import java.util.Arrays;
-
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import com.disneyapi.modelo.Audiovisual;
-import com.disneyapi.modelo.Genero;
-import com.disneyapi.modelo.Pelicula;
-import com.disneyapi.modelo.Personaje;
-import com.disneyapi.modelo.Usuario;
-import com.disneyapi.servicio.AlmacenamientoServicio;
-import com.disneyapi.servicio.AudiovisualServicio;
-import com.disneyapi.servicio.GeneroServicio;
-import com.disneyapi.servicio.PersonajeServicio;
-import com.disneyapi.servicio.UsuarioServicio;
-import com.disneyapi.util.enumerados.RolUsuario;
 
 @SpringBootApplication
 public class AlkemyProyectJavaBackendApplication {
@@ -28,7 +10,7 @@ public class AlkemyProyectJavaBackendApplication {
 		SpringApplication.run(AlkemyProyectJavaBackendApplication.class, args);
 	}
 
-	@Bean
+	/*@Bean
 	public CommandLineRunner init(PersonajeServicio personajeServicio, AudiovisualServicio audiovisualServicio,
 			GeneroServicio generoServicio, UsuarioServicio usuarioServicio, AlmacenamientoServicio servicioAlmacenamiento) {
 		return args -> {
@@ -68,6 +50,6 @@ public class AlkemyProyectJavaBackendApplication {
 			usuarioServicio.guardar(admin);
 			usuarioServicio.guardar(user);
 		};
-	}
+	}*/
 
 }
