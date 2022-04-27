@@ -16,6 +16,8 @@ import com.disneyapi.error.exception.AlmacenamientoArchivoNoEncontradoException;
 import com.disneyapi.error.exception.AlmacenamientoException;
 import com.disneyapi.error.exception.AudiovisualYaExisteException;
 import com.disneyapi.error.exception.ContrasenasNoCoincidenException;
+import com.disneyapi.error.exception.ErrorAlEnviarEmailRegistro;
+import com.disneyapi.error.exception.ErrorTipoAudiovisual;
 import com.disneyapi.error.exception.GeneroNoExisteException;
 import com.disneyapi.error.exception.PersonajeNoEstaEnAudiovisualException;
 import com.disneyapi.error.exception.PersonajeYaExisteException;
@@ -35,20 +37,21 @@ public class ErrorControlador extends ResponseEntityExceptionHandler {
 		return construirErrorResponseEntity(HttpStatus.NOT_FOUND, exception.getMessage());
 	}
 
-	@ExceptionHandler({ ContrasenasNoCoincidenException.class, PersonajeYaSeEncuentraEnException.class })
+	@ExceptionHandler({ ContrasenasNoCoincidenException.class, PersonajeYaSeEncuentraEnException.class, 
+		ErrorAlEnviarEmailRegistro.class })
 	protected ResponseEntity<ApiError> exceptionRequestIncorrecta(RuntimeException exception) {
 		return construirErrorResponseEntity(HttpStatus.BAD_REQUEST, exception.getMessage());
 	}
 
 	@ExceptionHandler({ UsuarioYaExisteException.class, PersonajeYaExisteException.class,
-			AudiovisualYaExisteException.class })
+			AudiovisualYaExisteException.class, ErrorTipoAudiovisual.class })
 	protected ResponseEntity<ApiError> exceptionRequestEnConflicto(RuntimeException exception) {
 		return construirErrorResponseEntity(HttpStatus.CONFLICT, exception.getMessage());
 	}
 
 	@ExceptionHandler({ ValidacionException.class })
 	protected ResponseEntity<ApiError> exceptionRequestIncorrectaValidaciones(ValidacionException exception) {
-		return construirErrorResponseEntity(HttpStatus.CONFLICT, exception.getMessage(), exception.getErrores());
+		return construirErrorResponseEntity(HttpStatus.BAD_REQUEST, exception.getMessage(), exception.getErrores());
 	}
 
 	@Override

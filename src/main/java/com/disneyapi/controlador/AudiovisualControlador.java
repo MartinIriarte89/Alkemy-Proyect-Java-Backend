@@ -151,10 +151,10 @@ public class AudiovisualControlador {
 		if(audiovisualServicio.existePorTitulo(audiovisualDto.getTitulo())) {
 			throw new AudiovisualYaExisteException(audiovisualDto.getTitulo());
 		}
-		if(audiovisualDto.getTipo().equalsIgnoreCase("pelicula") || audiovisualDto.getTipo().equalsIgnoreCase("serie")) {
+		if(!audiovisualDto.getTipo().equalsIgnoreCase("pelicula") && !audiovisualDto.getTipo().equalsIgnoreCase("serie")) {
 			throw new ErrorTipoAudiovisual(audiovisualDto.getTipo());
 		}
-		
+		System.out.println(audiovisualDto);
 		Audiovisual audiovisual = audiovisualServicio.guardarImagenYAgregarUrlImagen(
 				converter.convertirCrearAudiovisualDtoAAudiovisual(audiovisualDto), imagen);
 
