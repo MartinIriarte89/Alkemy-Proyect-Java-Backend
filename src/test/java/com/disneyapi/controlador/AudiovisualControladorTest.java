@@ -80,7 +80,9 @@ class AudiovisualControladorTest {
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 				.andExpect(jsonPath("$[0].titulo", is("Prueba")))
-				.andExpect(jsonPath("$[1].titulo", is("Prueba 2")));
+				.andExpect(jsonPath("$[1].titulo", is("Prueba 2")))
+				.andExpect(jsonPath("$[0].fechaDeEstreno", is(LocalDate.now().toString())))
+				.andExpect(jsonPath("$[1].fechaDeEstreno", is(LocalDate.now().toString())));
 		
 		verify(converter, times(2)).convertirAudiovisualAGetAudiovisualDto(any());
 		verify(audiovisualServicio).buscarPorArgs(any(), any(), any());
@@ -100,7 +102,8 @@ class AudiovisualControladorTest {
 		mockMvc.perform(get("/movies?name=Prueba"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
-				.andExpect(jsonPath("$[0].titulo", is("Prueba")));
+				.andExpect(jsonPath("$[0].titulo", is("Prueba")))
+				.andExpect(jsonPath("$[0].fechaDeEstreno", is(LocalDate.now().toString())));
 		
 		verify(converter).convertirAudiovisualAGetAudiovisualDto(any());
 		verify(audiovisualServicio).buscarPorTituloIgnoreCase("Prueba");
@@ -122,7 +125,7 @@ class AudiovisualControladorTest {
 	}
 
 	@Test
-	void buscarUnAudiovisualNoEncontradaTest() throws Exception {
+	void buscarUnAudiovisualNoEncontradoTest() throws Exception {
 		when(audiovisualServicio.buscarPorId(anyLong())).thenReturn(Optional.empty());
 
 		mockMvc.perform(get("/movies/2").contentType(MediaType.APPLICATION_JSON))
