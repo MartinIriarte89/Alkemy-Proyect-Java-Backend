@@ -2,12 +2,14 @@ package com.disneyapi.controlador;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -28,6 +30,7 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.disneyapi.dto.personaje.GetPersonajeDto;
@@ -157,6 +160,86 @@ class PersonajeControladorTest {
 		
 		verify(personajeServicio).buscarPorId(1L);
 	}
+	
+	@Test
+	void crearUnPersonajeTest() throws Exception {
+		Personaje personaje = new Personaje(1L, "http://localhost:8080/files/Mickey.jpg", "Mickey Mouse", 22, 30, null, null);
+		String personajeJson = "{\"nombre\":\"Mickey Mouse\",\"edad\":22,\"peso\":30, \"historia\":null}";
+		
+		MockMultipartFile archivoJsonPersonaje = new MockMultipartFile("personaje", "audiovisual.json", "application/json", personajeJson.getBytes());
+		MockMultipartFile archivoImagen = new MockMultipartFile("imagen", "miImagen.jpg", "image/jpeg", "null".getBytes());
+		
+		when(personajeServicio.existePorNombre(personaje.getNombre())).thenReturn(false);
+		when(converter.convertirCrearYEditarPersonajeDtoAPersonaje(any())).thenReturn(personaje);
+		when(personajeServicio.guardarImagenYAgregarUrlImagen(eq(personaje), any())).thenReturn(personaje);
+		when(personajeServicio.guardar(personaje)).thenReturn(personaje);
+		
+		mockMvc.perform(multipart("/characters").file(archivoJsonPersonaje).file(archivoImagen))
+				.andExpect(status().isCreated())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+				.andExpect(jsonPath("urlImagen", is("http://localhost:8080/files/Mickey.jpg")))
+				.andExpect(jsonPath("nombre", is("Mickey Mouse")))
+				.andExpect(jsonPath("edad", is(22)))
+				.andExpect(jsonPath("peso", is(30.0)));
+		
+		verify(personajeServicio).existePorNombre(personaje.getNombre());
+		verify(converter).convertirCrearYEditarPersonajeDtoAPersonaje(any());
+		verify(personajeServicio).guardarImagenYAgregarUrlImagen(eq(personaje), any());
+		verify(personajeServicio).guardar(personaje);
+	}
+	
+	@Test
+	void crearUnPersonajeConErroresValidacionTest() throws Exception {
+		String personajeJson = "{\"nombre\":\"    \",\"edad\":22,\"peso\":30, \"historia\":null}";
+		
+		MockMultipartFile archivoJsonPersonaje = new MockMultipartFile("personaje", "audiovisual.json", "application/json", personajeJson.getBytes());
+		MockMultipartFile archivoImagen = new MockMultipartFile("imagen", "miImagen.jpg", "image/jpeg", "null".getBytes());
+		
+		mockMvc.perform(multipart("/characters").file(archivoJsonPersonaje).file(archivoImagen))
+				.andExpect(status().isBadRequest())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+				.andExpect(jsonPath("mensaje", is("Existen errores de validacion")));
+		
+		verify(personajeServicio, never()).existePorNombre(any());
+		verify(converter, never()).convertirCrearYEditarPersonajeDtoAPersonaje(any());
+		verify(personajeServicio, never()).guardarImagenYAgregarUrlImagen(any(), any());
+		verify(personajeServicio, never()).guardar(any());
+	}
+	
+	@Test
+	void crearUnPersonajeQueYaExisteTest() throws Exception {
+		String personajeJson = "{\"nombre\":\"Mickey Mouse\",\"edad\":22,\"peso\":30, \"historia\":null}";
+		
+		MockMultipartFile archivoJsonPersonaje = new MockMultipartFile("personaje", "audiovisual.json", "application/json", personajeJson.getBytes());
+		MockMultipartFile archivoImagen = new MockMultipartFile("imagen", "miImagen.jpg", "image/jpeg", "null".getBytes());
+		
+		when(personajeServicio.existePorNombre("Mickey Mouse")).thenReturn(true);
+		
+		mockMvc.perform(multipart("/characters").file(archivoJsonPersonaje).file(archivoImagen))
+				.andExpect(status().isConflict())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+				.andExpect(jsonPath("mensaje", is("El personaje Mickey Mouse ya existe")));
+		
+		verify(personajeServicio).existePorNombre("Mickey Mouse");
+		verify(converter, never()).convertirCrearYEditarPersonajeDtoAPersonaje(any());
+		verify(personajeServicio, never()).guardarImagenYAgregarUrlImagen(any(), any());
+		verify(personajeServicio, never()).guardar(any());
+	}
+	
+	@Test
+	void crearUnPersonajeSinPartesTest() throws Exception {
+		MockMultipartFile archivoImagen = new MockMultipartFile("imagen", "miImagen.jpg", "image/jpeg", "null".getBytes());
+		
+		mockMvc.perform(multipart("/characters").file(archivoImagen))
+				.andExpect(status().isBadRequest())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON));
+		
+		verify(personajeServicio, never()).existePorNombre(any());
+		verify(converter, never()).convertirCrearYEditarPersonajeDtoAPersonaje(any());
+		verify(personajeServicio, never()).guardarImagenYAgregarUrlImagen(any(), any());
+		verify(personajeServicio, never()).guardar(any());
+	}
+	
 	
 	@Test
 	void eliminarUnPersonajeTest() throws Exception {
