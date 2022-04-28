@@ -2,9 +2,11 @@ package com.disneyapi.controlador;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -12,6 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -81,5 +84,101 @@ class PersonajeControladorTest {
 		
 		verify(personajeServicio).buscarPorArgs(any(),any(),any(),any());
 		verify(converter, times(2)).convertirPersonajeAGetPersonajeDto(any());
+	}
+	
+	@Test
+	void listarPersonajesSinPersonajesTest() throws Exception {
+		when(personajeServicio.buscarPorArgs(any(),any(),any(),any())).thenReturn(Page.empty());
+		
+		mockMvc.perform(get("/characters"))
+				.andExpect(status().isNotFound());
+		
+		verify(personajeServicio).buscarPorArgs(any(),any(),any(),any());
+		verify(converter, never()).convertirPersonajeAGetPersonajeDto(any());
+	}
+	
+	@Test
+	void listarPersonajesConNombrePresenteTest() throws Exception {
+		Personaje personaje = new Personaje(1L, "http://localhost:8080/files/Mickey.jpg", "Mickey Mouse", 22, 30, null, null);
+		
+		when(personajeServicio.buscarPorNombreIgnoreCase("Mickey Mouse")).thenReturn(Optional.of(personaje));
+		when(converter.convertirPersonajeAGetPersonajeDto(personaje))
+						.thenReturn(mapper.map(personaje, GetPersonajeDto.class));
+		
+		mockMvc.perform(get("/characters?name=Mickey Mouse"))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+				.andExpect(jsonPath("$[0].nombre", is("Mickey Mouse")))
+				.andExpect(jsonPath("$[0].urlImagen", is("http://localhost:8080/files/Mickey.jpg")))
+				.andExpect(jsonPath("$[1]").doesNotExist());
+		
+		verify(personajeServicio, never()).buscarPorArgs(any(),any(),any(),any());
+		verify(converter).convertirPersonajeAGetPersonajeDto(personaje);
+		verify(personajeServicio).buscarPorNombreIgnoreCase("Mickey Mouse");
+		}
+	
+	@Test
+	void listarPersonajesConNombrePresenteNoEncontradoTest() throws Exception {
+		Personaje personaje = new Personaje(1L, "http://localhost:8080/files/Mickey.jpg", "Mickey Mouse", 22, 30, null, null);
+		
+		when(personajeServicio.buscarPorNombreIgnoreCase("Pato Donald")).thenReturn(Optional.empty());
+		
+		mockMvc.perform(get("/characters?name=Pato Donald"))
+				.andExpect(status().isNotFound());
+		
+		verify(personajeServicio, never()).buscarPorArgs(any(),any(),any(),any());
+		verify(converter, never()).convertirPersonajeAGetPersonajeDto(personaje);
+		verify(personajeServicio).buscarPorNombreIgnoreCase("Pato Donald");
+	}
+	
+	@Test
+	void buscarUnPersonajeTest() throws Exception {
+		Personaje personaje = new Personaje(1L, "http://localhost:8080/files/Mickey.jpg", "Mickey Mouse", 22, 30, null, null);
+		
+		when(personajeServicio.buscarPorId(1L)).thenReturn(Optional.of(personaje));
+		
+		mockMvc.perform(get("/characters/1"))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+				.andExpect(jsonPath("nombre", is("Mickey Mouse")))
+				.andExpect(jsonPath("urlImagen", is("http://localhost:8080/files/Mickey.jpg")));
+		
+		verify(personajeServicio).buscarPorId(1L);
+	}
+	
+	@Test
+	void buscarUnPersonajeNoExistenteTest() throws Exception {
+		when(personajeServicio.buscarPorId(1L)).thenReturn(Optional.empty());
+		
+		mockMvc.perform(get("/characters/1"))
+				.andExpect(status().isNotFound())
+				.andExpect(jsonPath("nombre").doesNotExist())
+				.andExpect(jsonPath("urlImagen").doesNotExist());
+		
+		verify(personajeServicio).buscarPorId(1L);
+	}
+	
+	@Test
+	void eliminarUnPersonajeTest() throws Exception {
+		Personaje personaje = new Personaje(1L, "http://localhost:8080/files/Mickey.jpg", "Mickey Mouse", 22, 30, null, null);
+		
+		when(personajeServicio.buscarPorId(1L)).thenReturn(Optional.of(personaje));
+		
+		mockMvc.perform(delete("/characters/1"))
+				.andExpect(status().isNoContent());
+		
+		verify(personajeServicio).buscarPorId(1L);
+		verify(personajeServicio).borrar(personaje);
+	}
+	
+	@Test
+	void eliminarUnPersonajeInexistenteTest() throws Exception {
+		when(personajeServicio.buscarPorId(1L)).thenReturn(Optional.empty());
+		
+		mockMvc.perform(delete("/characters/1"))
+				.andExpect(status().isNotFound());
+		
+		verify(personajeServicio).buscarPorId(1L);
+		verify(personajeServicio, never()).borrar(any());
 	}
 }

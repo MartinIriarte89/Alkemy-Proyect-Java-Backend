@@ -81,12 +81,13 @@ public class PersonajeControlador {
 		
 		if(nombre.isPresent()) {
 			Personaje personaje = personajeServicio.buscarPorNombreIgnoreCase(nombre.get()).orElse(PersonajeNulo.construir());
+
+			if(personaje.esNulo()) {
+				return ResponseEntity.notFound().build();
+			}
 			GetPersonajeDto getPersonajeDto = converter.convertirPersonajeAGetPersonajeDto(personaje);
 			
-			if(personaje.esNulo())
-				return ResponseEntity.notFound().build();
-			else
-				return ResponseEntity.ok(Arrays.asList(getPersonajeDto));
+			return ResponseEntity.ok(Arrays.asList(getPersonajeDto));
 		}else {
 			Page<Personaje> personajes = personajeServicio.buscarPorArgs(edad, peso, peliculaTitulo, pageable);
 			
