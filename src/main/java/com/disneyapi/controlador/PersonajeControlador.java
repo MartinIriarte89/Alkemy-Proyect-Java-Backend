@@ -167,7 +167,7 @@ public class PersonajeControlador {
 			@ApiResponse(code = 500, message = "Internal Server Error", response = ApiError.class)})
 	
 	@PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<Personaje> actualizarPersonaje(
+	public ResponseEntity<Personaje> editarPersonaje(
 			@ApiParam(value = "Id del personaje que se desea editar", required = false, type = "int")
 			@PathVariable Long id,
 			@ApiParam(value = "Representación Json del personaje a guardar. Se espera un CrearYEditarPersonajeDto, chequear el modelo.", required = true, type = "object")
