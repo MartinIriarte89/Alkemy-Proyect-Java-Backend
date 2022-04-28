@@ -83,9 +83,7 @@ class AudiovisualControladorTest {
 		Genero genero = new Genero(1L, "Musical", null);
 		Audiovisual audiovisual = new Pelicula(1L, null, "Prueba", LocalDate.now(), 4, null, genero);
 		Audiovisual audiovisual2 = new Pelicula(2L, null, "Prueba 2", LocalDate.now(), 3, null, genero);
-		List<Audiovisual> lista = new ArrayList<>();
-		lista.add(audiovisual);
-		lista.add(audiovisual2);
+		List<Audiovisual> lista = Arrays.asList(audiovisual, audiovisual2);
 		Page<Audiovisual> audiovisuales = new PageImpl<Audiovisual>(lista);
 		
 		when(audiovisualServicio.buscarPorArgs(any(), any(), any())).thenReturn(audiovisuales);
