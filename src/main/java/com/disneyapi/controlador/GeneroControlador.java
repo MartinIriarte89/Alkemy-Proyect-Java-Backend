@@ -37,7 +37,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/genre")
+@RequestMapping("/genres")
 public class GeneroControlador {
 
 	private final GeneroServicio generoServicio;
