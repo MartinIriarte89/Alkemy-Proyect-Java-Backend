@@ -21,7 +21,9 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Data
@@ -60,6 +62,8 @@ public class Personaje {
 	@Size(max = 1500)
 	private String historia;
 
+	@ToString.Exclude
+	@EqualsAndHashCode.Exclude
 	@ApiModelProperty(value = "List de Audiovisual, que representan las películas y series en la que se encuentra el personaje.", dataType = "List", required = false, position = 7)
 	@ManyToMany(mappedBy = "personajes")
 	@JsonSerialize(using = PersonajeSerializador.class)
