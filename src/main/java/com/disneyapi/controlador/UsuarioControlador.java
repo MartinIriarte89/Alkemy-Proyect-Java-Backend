@@ -50,7 +50,6 @@ public class UsuarioControlador {
 														.map(converter::convertirUsuarioAGetUsuarioDto)
 														.collect(Collectors.toList());						
 														
-		
 		return ResponseEntity.status(HttpStatus.OK).header("link", paginacionLinks.crearLinkHeader(usuarios, builder))
 				.body(getUsuariosDtos);
 	}
@@ -73,9 +72,7 @@ public class UsuarioControlador {
 		if(!usuarioServicio.existePorId(id)) {
 			return ResponseEntity.notFound().build();
 		}
-		
 		usuarioServicio.borrarPorId(id);
 		return ResponseEntity.noContent().build();
 	}
-	
 }

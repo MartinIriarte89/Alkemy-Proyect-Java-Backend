@@ -107,10 +107,10 @@ public class AutenticacionControlador {
 		Usuario usuario = converter.convertirUsuarioRegistroDtoAUsuario(usuarioRegistroDto);
 		usuario.setRoles(Arrays.asList(RolUsuario.ROLE_USER));
 		usuario.setContrasena(encriptador.encode(usuario.getContrasena()));
-		usuarioServicio.guardar(usuario);
 		if(!emailServicio.enviarMail(usuario.getNombreCompleto(), usuario.getEmail())){
 			throw new ErrorAlEnviarEmailRegistro();
 		}
+		usuarioServicio.guardar(usuario);
 		GetUsuarioDto usuarioDto = converter.convertirUsuarioAGetUsuarioDto(usuario);
 		usuarioDto.setToken(jwtProveedor.generarToken(usuarioDto.getNombreUsuario()));
 

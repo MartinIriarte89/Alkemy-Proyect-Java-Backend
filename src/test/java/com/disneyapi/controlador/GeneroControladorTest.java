@@ -36,11 +36,11 @@ import com.disneyapi.util.converter.GeneroDtoConverter;
 import com.disneyapi.util.paginacion.PaginacionLinks;
 
 
-@WebMvcTest(value = GeneroControlador.class,  excludeFilters = {
+@WebMvcTest(value = GeneroControlador.class, excludeFilters = {
     	@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, 
     	classes = { SeguridadConfig.class, AutorizacionFiltro.class})},  
 		excludeAutoConfiguration = {SecurityAutoConfiguration.class})
-public class GeneroControladorTest {
+class GeneroControladorTest {
 
 	@Autowired
 	MockMvc mockMvc;

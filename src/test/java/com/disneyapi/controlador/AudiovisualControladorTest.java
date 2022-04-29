@@ -53,7 +53,7 @@ import com.disneyapi.servicio.PersonajeServicio;
 import com.disneyapi.util.converter.AudiovisualDtoConverter;
 import com.disneyapi.util.paginacion.PaginacionLinks;
 
-@WebMvcTest(value = AudiovisualControlador.class,  excludeFilters = {
+@WebMvcTest(value = AudiovisualControlador.class, excludeFilters = {
         	@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, 
         	classes = { SeguridadConfig.class, AutorizacionFiltro.class})},  
 			excludeAutoConfiguration = {SecurityAutoConfiguration.class})
