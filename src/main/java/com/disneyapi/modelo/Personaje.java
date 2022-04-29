@@ -1,7 +1,9 @@
 package com.disneyapi.modelo;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -65,9 +67,9 @@ public class Personaje {
 	@ToString.Exclude
 	@EqualsAndHashCode.Exclude
 	@ApiModelProperty(value = "List de Audiovisual, que representan las películas y series en la que se encuentra el personaje.", dataType = "List", required = false, position = 7)
-	@ManyToMany(mappedBy = "personajes")
+	@ManyToMany(mappedBy = "personajes", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
 	@JsonSerialize(using = PersonajeSerializador.class)
-	private List<Audiovisual> audiovisuales;
+	private List<Audiovisual> audiovisuales = new ArrayList<>();
 
 	public boolean esNulo() {
 		return false;

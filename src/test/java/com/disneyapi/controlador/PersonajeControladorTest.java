@@ -15,6 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -37,9 +38,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.disneyapi.dto.personaje.CrearYEditarPersonajeDto;
 import com.disneyapi.dto.personaje.GetPersonajeDto;
 import com.disneyapi.filtro.AutorizacionFiltro;
+import com.disneyapi.modelo.Audiovisual;
+import com.disneyapi.modelo.Genero;
+import com.disneyapi.modelo.Pelicula;
 import com.disneyapi.modelo.Personaje;
 import com.disneyapi.modelo.objetonulo.PersonajeNulo;
 import com.disneyapi.seguridad.SeguridadConfig;
+import com.disneyapi.servicio.AudiovisualServicio;
 import com.disneyapi.servicio.PersonajeServicio;
 import com.disneyapi.util.converter.PersonajeDtoConverter;
 import com.disneyapi.util.paginacion.PaginacionLinks;
@@ -59,6 +64,8 @@ class PersonajeControladorTest {
 	private PersonajeDtoConverter converter;
 	@MockBean
 	private PaginacionLinks links;
+	@MockBean
+	private AudiovisualServicio audiovisualServicio;
 	
 	ModelMapper mapper;
 	
@@ -326,8 +333,23 @@ class PersonajeControladorTest {
 	}
 	
 	@Test
-	void eliminarUnPersonajeTest() throws Exception {
-		Personaje personaje = new Personaje(1L, "http://localhost:8080/files/Mickey.jpg", "Mickey Mouse", 22, 30, null, null);
+	void eliminarUnPersonajeSinAudiovisualesTestTest() throws Exception {
+		Personaje personaje = new Personaje(1L, "http://localhost:8080/files/Mickey.jpg", "Mickey Mouse", 22, 30, null, Arrays.asList());
+		
+		when(personajeServicio.buscarPorId(1L)).thenReturn(Optional.of(personaje));
+		
+		mockMvc.perform(delete("/characters/1"))
+				.andExpect(status().isNoContent());
+		
+		verify(personajeServicio).buscarPorId(1L);
+		verify(personajeServicio).borrar(personaje);
+	}
+	
+	@Test
+	void eliminarUnPersonajeConAudiovisualesTestTest() throws Exception {
+		Genero genero = new Genero(1L, "Musical", null);
+		Audiovisual audiovisual = new Pelicula(1L, null, "Prueba", LocalDate.now(), 4, Arrays.asList(), genero);
+		Personaje personaje = new Personaje(1L, "http://localhost:8080/files/Mickey.jpg", "Mickey Mouse", 22, 30, null, Arrays.asList(audiovisual));
 		
 		when(personajeServicio.buscarPorId(1L)).thenReturn(Optional.of(personaje));
 		

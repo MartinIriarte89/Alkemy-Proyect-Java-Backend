@@ -31,8 +31,10 @@ import com.disneyapi.dto.personaje.GetPersonajeDto;
 import com.disneyapi.error.ApiError;
 import com.disneyapi.error.exception.PersonajeYaExisteException;
 import com.disneyapi.error.exception.ValidacionException;
+import com.disneyapi.modelo.Audiovisual;
 import com.disneyapi.modelo.Personaje;
 import com.disneyapi.modelo.objetonulo.PersonajeNulo;
+import com.disneyapi.servicio.AudiovisualServicio;
 import com.disneyapi.servicio.PersonajeServicio;
 import com.disneyapi.util.converter.PersonajeDtoConverter;
 import com.disneyapi.util.paginacion.PaginacionLinks;
@@ -52,6 +54,7 @@ public class PersonajeControlador {
 	private final PersonajeServicio personajeServicio;
 	private final PersonajeDtoConverter converter;
 	private final PaginacionLinks paginacionLinks;
+	private final AudiovisualServicio audiovisualServicio;
 	
 	@ApiOperation(value = "Obtener una lista de personajes", 
 			notes = "Provee un mecanismo para obtener todos los personajes con paginación, "
@@ -206,6 +209,13 @@ public class PersonajeControlador {
 		if(personaje.esNulo()) {
 			return ResponseEntity.notFound().build();
 		}
+		if(!personaje.getAudiovisuales().isEmpty()) {
+			for (Audiovisual audiovisual : personaje.getAudiovisuales()) {
+				audiovisual.eliminarA(personaje);
+				audiovisualServicio.guardar(audiovisual);
+			}
+		}
+		
 		personajeServicio.borrar(personaje);
 		return ResponseEntity.noContent().build();
 	}

@@ -78,7 +78,7 @@ public class AudiovisualControlador {
 			@RequestParam("name") Optional<String> titulo,
 			@ApiParam(value = "Cadena para filtrar por el género", required = false, type = "String")
 			@RequestParam("genre") Optional<String> genero,
-			@ApiParam(value = "orden deseado, puede ser ASC o DESC.", required = false, type = "String")
+			@ApiParam(value = "orden deseado en función de la fecha, puede ser ASC o DESC.", required = false, type = "String")
 			@RequestParam("order") Optional<String> orden,
 			@ApiIgnore @PageableDefault(size = 20, page = 0) Pageable pageable, @ApiIgnore HttpServletRequest request) {
 

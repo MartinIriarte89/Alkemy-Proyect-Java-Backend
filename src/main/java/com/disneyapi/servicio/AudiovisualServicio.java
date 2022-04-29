@@ -57,7 +57,7 @@ public class AudiovisualServicio extends BaseServicio<Audiovisual, Long, Audiovi
 			public Predicate toPredicate(Root<Audiovisual> root, CriteriaQuery<?> query,
 					CriteriaBuilder criteriaBuilder) {
 				if (genero.isPresent()) {
-					return criteriaBuilder.equal(root.get("genero").get("nombre"), genero.get());
+					return criteriaBuilder.equal(criteriaBuilder.lower(root.get("genero").get("nombre")), genero.get().toLowerCase());
 				} else {
 					return criteriaBuilder.isTrue(criteriaBuilder.literal(true));
 				}
@@ -67,10 +67,10 @@ public class AudiovisualServicio extends BaseServicio<Audiovisual, Long, Audiovi
 		if (orden.isPresent()) {
 			if (orden.get().equalsIgnoreCase("ASC"))
 				pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
-						Sort.by(Sort.Order.asc("fechaDeCreacion")));
+						Sort.by(Sort.Order.asc("fechaDeEstreno")));
 			else if (orden.get().equalsIgnoreCase("DESC"))
 				pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
-						Sort.by(Sort.Order.desc("fechaDeCreacion")));
+						Sort.by(Sort.Order.desc("fechaDeEstreno")));
 		}
 
 		return this.repositorio.findAll(specGeneroAudiovisual, pageable);
