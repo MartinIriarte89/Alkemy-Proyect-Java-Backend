@@ -8,6 +8,7 @@ de usuarios con perfiles de Admin y User. Los Admin son los únicos que pueden a
 usuarios solo tienen permisos de lectura. 
 
 La api está documentada accediendo a la dirección de : **/swagger-ui.html** la cual es pública!!
+La ruta de la bd está en : **/h2-console**  y se tiene acceso solo con permisos de Admin.
 
 Por defecto la api está funcionando con H2 con unos datos precargados de películas, personajes, géneros y usuarios para poder descargar el proyecto y con tan solo correrlo
 esté funcionando.
