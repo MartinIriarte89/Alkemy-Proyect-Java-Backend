@@ -35,8 +35,7 @@ public class SeguridadConfig extends WebSecurityConfigurerAdapter {
             "/configuration/security",
             "/swagger-ui.html",
             "/webjars/**",
-            "/auth/**",
-            "/h2-console/**"
+            "/auth/**"
     };
 	
 	@Override
@@ -60,6 +59,7 @@ public class SeguridadConfig extends WebSecurityConfigurerAdapter {
 			.and()
 			.authorizeHttpRequests()
 				.antMatchers(AUT_LISTAPERMITIDOS).permitAll()
+				.antMatchers("/h2-console/**").hasRole(RolUsuario.ROLE_ADMIN.getRol())
 				.antMatchers(HttpMethod.POST, RutaUtilidades.AUDIOVISUALES).hasRole(RolUsuario.ROLE_ADMIN.getRol())
 				.antMatchers(HttpMethod.PUT, RutaUtilidades.AUDIOVISUALES).hasRole(RolUsuario.ROLE_ADMIN.getRol())
 				.antMatchers( HttpMethod.DELETE, RutaUtilidades.AUDIOVISUALES).hasRole(RolUsuario.ROLE_ADMIN.getRol())
